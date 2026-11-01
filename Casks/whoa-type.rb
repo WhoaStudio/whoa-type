@@ -1,11 +1,11 @@
 cask "whoa-type" do
-  version "1.2"
-  sha256 "382f65254e87657e2327e548c34b559185e37fdd0ecf95997f9fe71702542d17"
+  version "1.0.0"
+  sha256 "3a18a3b480d6d50252e0a6d14a70a8ea3a47b994c587129aa089528563928522"
 
-  url "https://github.com/WhoaStudio/Whoa-Typer/releases/download/v#{version}/WhoaType-#{version}-macOS.dmg"
+  url "https://github.com/WhoaStudio/whoa-type/releases/download/v#{version}/WhoaType-#{version}-macOS.dmg"
   name "Whoa Type"
   desc "Menu bar keyboard and mouse sound utility"
-  homepage "https://github.com/WhoaStudio/Whoa-Typer"
+  homepage "https://github.com/WhoaStudio/whoa-type"
 
   depends_on macos: :tahoe
 
