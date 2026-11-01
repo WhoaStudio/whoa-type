@@ -95,4 +95,23 @@ struct PackDiscoveryTests {
             fallbackGroup: "standard", keyGroups: [:], keys: [:], preview: [])
         #expect(throws: (any Error).self) { try SoundPackValidator.validate(countManifest, root: root, rate: 48000) }
     }
+    @Test func cheapDiscoverySkipsAudioButStillChecksPaths() throws {
+        let root = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)
+        defer { try? FileManager.default.removeItem(at: root) }
+        // A file that is not decodable audio passes cheap discovery but fails full validation.
+        try Data("not audio".utf8).write(to: root.appendingPathComponent("bad.wav"))
+        let m = try AudioTests.manifest()
+        let manifest = SoundPackManifest(schemaVersion: 1, id: "cheap", displayName: "Cheap", license: nil,
+            gainDB: m.gainDB, pitchCents: m.pitchCents,
+            samples: ["standard": .init(down: ["bad.wav"], up: ["bad.wav"])],
+            fallbackGroup: "standard", keyGroups: [:], keys: [:], preview: [])
+        #expect(throws: Never.self) { try SoundPackValidator.validate(manifest, root: root, rate: 48000, inspectAudio: false) }
+        #expect(throws: (any Error).self) { try SoundPackValidator.validate(manifest, root: root, rate: 48000) }
+        let missing = SoundPackManifest(schemaVersion: 1, id: "cheap", displayName: "Cheap", license: nil,
+            gainDB: m.gainDB, pitchCents: m.pitchCents,
+            samples: ["standard": .init(down: ["gone.wav"], up: ["gone.wav"])],
+            fallbackGroup: "standard", keyGroups: [:], keys: [:], preview: [])
+        #expect(throws: (any Error).self) { try SoundPackValidator.validate(missing, root: root, rate: 48000, inspectAudio: false) }
+    }
 }

@@ -9,33 +9,75 @@ on:
         required: true
         type: string
 permissions:
-  contents: write
+  contents: read
 concurrency:
   group: release-stable
   cancel-in-progress: false
 jobs:
+  prepare:
+    if: github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/stable'
+    runs-on: macos-26
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      ready: ${{ steps.version.outputs.ready }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: stable
+          fetch-depth: 0
+      - name: Prepare version through a pull request
+        id: version
+        env:
+          VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 scripts/version.py "$VERSION" --bump
+          if git diff --quiet -- whoa-type.xcodeproj/project.pbxproj; then
+            echo 'ready=true' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          branch="release/v$VERSION"
+          existing=$(gh pr list --base stable --head "$branch" --json url --jq '.[0].url // empty')
+          if [[ -z "$existing" ]]; then
+            git switch -c "$branch"
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add whoa-type.xcodeproj/project.pbxproj
+            git commit -m "chore(release): prepare v$VERSION"
+            git push origin "HEAD:refs/heads/$branch"
+            existing=$(gh pr create --base stable --head "$branch" \
+              --title "chore(release): prepare v$VERSION" \
+              --body 'Merge after CI passes, then rerun Release with the same version. Approve workflow runs on this bot-created PR when prompted.')
+          fi
+          echo 'ready=false' >> "$GITHUB_OUTPUT"
+          echo "Merge $existing, then rerun Release with version $VERSION." >> "$GITHUB_STEP_SUMMARY"
   release:
+    needs: prepare
+    if: always() && !cancelled() && (github.event_name == 'push' || needs.prepare.outputs.ready == 'true')
     runs-on: macos-26
     timeout-minutes: 60
-    env:
-      GH_TOKEN: ${{ github.token }}
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
-      # actions/checkout v4.2.2, pinned to a commit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           ref: ${{ github.event_name == 'workflow_dispatch' && 'stable' || github.ref }}
           fetch-depth: 0
-      - name: Create version commit and tag for a UI release
+      - name: Tag the merged version for a UI release
         if: github.event_name == 'workflow_dispatch'
         env:
           VERSION: ${{ inputs.version }}
-          RELEASE_WATCH: '0'
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           python3 scripts/version.py "$VERSION"
           if ! git show-ref --verify --quiet "refs/tags/v$VERSION"; then
-            scripts/release.sh "$VERSION"
+            git tag -a "v$VERSION" -m "Release v$VERSION"
+            git push origin "refs/tags/v$VERSION"
           fi
           # GITHUB_TOKEN pushes do not trigger another workflow; continue here.
       - name: Resolve tag and require membership in stable
@@ -55,6 +97,8 @@ jobs:
             exit 1
           }
           git checkout --detach "$commit"
+          python3 scripts/version.py "$version" --bump
+          git diff --exit-code -- whoa-type.xcodeproj/project.pbxproj
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - name: Configure optional signing
@@ -67,14 +111,13 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
         run: scripts/configure-signing.sh
-      - name: Core tests
-        run: swift test
       - name: Build DMG
         env:
           VERSION: ${{ steps.release.outputs.version }}
         run: scripts/build-dmg.sh "$VERSION"
       - name: Publish DMG and generated release notes
         env:
+          GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.release.outputs.tag }}
           VERSION: ${{ steps.release.outputs.version }}
           SIGNED: ${{ steps.signing.outputs.signed }}
@@ -98,8 +141,9 @@ jobs:
           fi
           gh release upload "$TAG" "build/release/WhoaType-$VERSION-macOS.dmg" --clobber
           gh release edit "$TAG" --draft=false
-      - name: Update cask on stable
+      - name: Open a cask update pull request
         env:
+          GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.release.outputs.version }}
         run: |
           artifact="$PWD/build/release/WhoaType-$VERSION-macOS.dmg"
@@ -119,8 +163,19 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add Casks/whoa-type.rb
           if ! git diff --cached --quiet; then
+            branch="release/cask-$VERSION"
+            existing=$(gh pr list --base stable --head "$branch" --json url --jq '.[0].url // empty')
+            if [[ -n "$existing" ]]; then
+              echo "Cask update already pending: $existing" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            git switch -c "$branch"
             git commit -m "chore(cask): update cask to $VERSION"
-            git push origin HEAD:stable
+            git push origin "HEAD:refs/heads/$branch"
+            gh pr create --base stable --head "$branch" \
+              --title "chore(cask): update cask to $VERSION" \
+              --body 'Update the cask for the published release. Approve workflow runs on this bot-created PR when prompted, then merge after CI passes.' \
+              >> "$GITHUB_STEP_SUMMARY"
           fi
       - name: Remove signing credentials
         if: always()

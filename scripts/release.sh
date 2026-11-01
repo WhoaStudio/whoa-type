@@ -16,12 +16,27 @@ if git show-ref --verify --quiet "refs/tags/$tag"; then
   fail "Tag $tag already exists."
 fi
 [[ -z $(git ls-remote --tags origin "refs/tags/$tag") ]] || fail "Remote tag $tag already exists."
+command -v gh >/dev/null || fail 'Install gh and authenticate before releasing.'
+branch="release/$tag"
+existing=$(gh pr list --base stable --head "$branch" --json url --jq '.[0].url // empty')
+if [[ -n "$existing" ]]; then
+  echo "Merge $existing after CI passes, then rerun scripts/release.sh $version."
+  exit 0
+fi
 python3 scripts/version.py "$version" --bump
-git add whoa-type.xcodeproj/project.pbxproj
-# A version already present in the project still needs a release commit.
-git commit --allow-empty -m "chore(release): release $tag"
+if ! git diff --quiet -- whoa-type.xcodeproj/project.pbxproj; then
+  git switch -c "$branch"
+  git add whoa-type.xcodeproj/project.pbxproj
+  git commit -m "chore(release): prepare $tag"
+  git push origin "HEAD:refs/heads/$branch"
+  gh pr create --base stable --head "$branch" --title "chore(release): prepare $tag" \
+    --body 'Prepare the release version. Merge after CI passes, then rerun scripts/release.sh with the same version on the updated stable branch.'
+  git switch stable
+  echo "Merge the version PR, pull stable, then rerun scripts/release.sh $version."
+  exit 0
+fi
 git tag -a "$tag" -m "Release $tag"
-git push --atomic origin HEAD:refs/heads/stable "refs/tags/$tag"
+git push origin "refs/tags/$tag"
 repo_url=$(git remote get-url origin)
 repo_url=${repo_url%.git}
 repo_url=${repo_url/git@github.com:/https:\/\/github.com/}

@@ -44,12 +44,12 @@ Static risks to check when you build:
 | C1 licensing | **Partly fixed.** Removed `keychron-q3-bluex` (and its test entry). The other 15 packs still have no recorded licence or provenance, so they are not resolved. That needs the maintainer's decision. |
 | H1 capture recovery | Fixed: tap is re-enabled in place, held state cleared, attempt counter reset while capture is healthy. |
 | H2 hover preview | Fixed: 250 ms debounce plus a bank cache so restoring the selection doesn't re-decode. Live capture is still paused during an audition (not changed). |
-| H3 CI gate | Fixed: added `.github/workflows/ci.yml` (job `build`) and a `swift test` step before the release build. `protect-branches.sh` now warns that the cask push to `stable` needs a bypass; the workflow itself is unchanged. |
+| H3 CI gate | Fixed upstream while this branch was open (`stable` @ `c939d5f`, PR #2: `ci.yml`, protected release flow). This branch took that version of the workflow files. |
 | H4 Swift 5 vs 6 mode | **Not changed.** Flipping `SWIFT_VERSION`/default isolation without a compiler would likely break the build. `CLAUDE.md` now documents the difference. |
 | M1 Return ding | Fixed: capture thread now signals a `DispatchSource` instead of creating a `Task`. The ding still plays through `NSSound`, not the renderer. |
 | M2 launch validation | Fixed: discovery skips per-WAV inspection (`inspectAudio: false`); `load` still validates fully. |
 | M3 wallpaper | Fixed: downsampled thumbnail decoded off the main thread. |
-| M4 CI hygiene | Partly fixed: `actions/checkout` pinned to a commit, keychain import uses `-T` instead of `-A`. Job-level permission scoping not done. |
+| M4 CI hygiene | Fixed: pinning and permission scoping came from upstream PR #2; the keychain import here uses `-T` instead of `-A`. |
 | M5 hotkey lifetime | Fixed: `let` properties, `invalidate()` called on quit. |
 | M6 settings tasks | Partly fixed: gain and effects are only re-sent when they change. Still one task per change. |
 | M7 entitlements | Fixed: removed `ENABLE_USER_SELECTED_FILES` and `REGISTER_APP_GROUPS`. |
