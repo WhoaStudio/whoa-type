@@ -37,7 +37,7 @@ Static risks to check when you build:
 
 ## Remediation status (second commit on this branch)
 
-**Nothing below has been compiled or run.** There is still no Swift/Xcode toolchain in this environment, so every code change is unverified until `xcodebuild … build` and `swift test` pass on a Mac (the new `ci.yml` will do this on the PR).
+**Build status:** CI (`swift test` plus an unsigned `xcodebuild`, on macOS) is green on the PR head. That proves the code compiles and the core tests pass. **Runtime behavior is still untested**: event-tap recovery, hover preview, Return ding and the About banner need a manual check on a Mac.
 
 | Finding | Status |
 |---|---|
@@ -45,7 +45,7 @@ Static risks to check when you build:
 | H1 capture recovery | Fixed: tap is re-enabled in place, held state cleared, attempt counter reset while capture is healthy. |
 | H2 hover preview | Fixed: 250 ms debounce plus a bank cache so restoring the selection doesn't re-decode. Live capture is still paused during an audition (not changed). |
 | H3 CI gate | Fixed upstream while this branch was open (`stable` @ `c939d5f`, PR #2: `ci.yml`, protected release flow). This branch took that version of the workflow files. |
-| H4 Swift 5 vs 6 mode | **Not changed.** Flipping `SWIFT_VERSION`/default isolation without a compiler would likely break the build. `CLAUDE.md` now documents the difference. |
+| H4 Swift 5 vs 6 mode | Fixed: the app target now compiles in Swift 6 mode (CI green). `Package.swift` still has no default-isolation setting; `CLAUDE.md` says to keep annotations explicit. |
 | M1 Return ding | Fixed: capture thread now signals a `DispatchSource` instead of creating a `Task`. The ding still plays through `NSSound`, not the renderer. |
 | M2 launch validation | Fixed: discovery skips per-WAV inspection (`inspectAudio: false`); `load` still validates fully. |
 | M3 wallpaper | Fixed: downsampled thumbnail decoded off the main thread. |
@@ -53,10 +53,11 @@ Static risks to check when you build:
 | M5 hotkey lifetime | Partly fixed: `invalidate()` removes the handler on quit. The properties stay `var` because SwiftUI bindings (`$coordinator.settings.x`) need them. |
 | M6 settings tasks | Partly fixed: gain and effects are only re-sent when they change. Still one task per change. |
 | M7 entitlements | Fixed: removed `ENABLE_USER_SELECTED_FILES` and `REGISTER_APP_GROUPS`. |
-| M8 coordinator tests | Not done. |
+| M8 coordinator tests | Partly fixed: the capture-recovery rules are a pure `HealthAction.decide` with tests (`HealthPolicyTests`). The coordinator's other state machine (`perform`) is still untested. |
 | L1, L3, L6, L9, L10 | Fixed (`activate()`, hash-based pack colour, no force unwraps in the loader, removed the ineffective `.commands`, shared scheme added). |
-| L4 | Partly: removed three empty pack folders. The unreferenced original WAVs remain because the importer and docs treat them as retained sources. |
-| L2, L5, L7, L8, L11, L12 | Not done (L11, the bundle ID, would reset users' preferences and permission). |
+| L4 | Partly: removed three empty pack folders. The unreferenced original WAVs (about 1.4 MB) were left in place deliberately: the docs describe them as retained originals and the saving is small. |
+| L2, L5, L7, L8, L12 | Fixed: reference-counted activation policy, `AudioControl.Kind` enum, duplicate permission poll removed, `os.Logger` lifecycle errors (no input data), `MainActor.assumeIsolated` in main-queue observers. |
+| L11 bundle ID | Not changed: it would reset users' preferences and Input Monitoring permission. Decide before wider adoption. |
 | D1–D9 | Fixed in README, CLAUDE.md, ARCHITECTURE, SCAFFOLD, PRIVACY, VALIDATION, and all `Whoa-Typer` links. README has no real screenshots (needs a Mac); it uses the existing banner image. |
 
 Findings below are as originally reported against `2efdf7a`.

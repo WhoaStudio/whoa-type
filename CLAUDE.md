@@ -14,7 +14,7 @@
 - The Xcode target is the app; `Package.swift` tests a subset of the same sources. Passing core tests does not verify UI, TCC or installed-app behavior.
 - Capture is the single trigger producer, including Preview. Preserve that ownership and renderer acknowledgement before freeing sample banks. No allocations, locks, I/O or logging on capture/render paths.
 - Preview pauses live capture and restores selection; preserve latest-request cancellation and commit selection only after successful installation.
-- The Xcode target defaults to MainActor isolation (Swift 5 mode); hot-path types explicitly opt out with `nonisolated`. The SwiftPM core target uses the Swift 6 defaults, so keep annotations explicit. Follow existing isolation conventions.
+- The Xcode target compiles in Swift 6 mode with MainActor as the default isolation; hot-path types explicitly opt out with `nonisolated`. The SwiftPM core target has no default-isolation setting, so keep `nonisolated`/`@MainActor` annotations explicit on every type. Follow existing isolation conventions.
 - Never log input data or translate physical key codes to text. Probe permission does not authorize the main app.
 - Prepared packs intentionally reuse keyboard down/up samples. Names do not identify hardware, and source licensing does not establish recording rights.
 
