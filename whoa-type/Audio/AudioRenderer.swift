@@ -84,9 +84,9 @@ nonisolated final class AudioRenderer: @unchecked Sendable {
         if s.pointee.transition == 0 {
             for _ in 0..<8 {
                 guard let command = mailbox.commands.pop() else { break }
-                if command.kind == 0 { s.pointee.targetGain = command.gain; continue }
+                if command.kind == .gain { s.pointee.targetGain = command.gain; continue }
                 s.pointee.pendingBank = command.bank
-                s.pointee.swap = command.kind == 1
+                s.pointee.swap = command.kind == .bankTransition
                 s.pointee.sequence = command.sequence
                 s.pointee.transition = s.pointee.fadeFrames
                 triggers.discard()

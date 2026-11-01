@@ -68,7 +68,7 @@ struct AudioTests {
                 AudioRenderer.render(state: renderer.state, triggers: ring, mailbox: mailbox, frames: 256, left: l.baseAddress!, right: r.baseAddress!)
             }}
         }
-        #expect(mailbox.commands.push(AudioControl(kind: 1, bank: bank.header, sequence: 1)))
+        #expect(mailbox.commands.push(AudioControl(kind: .bankTransition, bank: bank.header, sequence: 1)))
         render()
         #expect(mailbox.acknowledged.load(ordering: .acquiring) == 1)
         #expect(ring.push(AudioTrigger(slot: 0, phase: .down, pan: -1)))
@@ -84,7 +84,7 @@ struct AudioTests {
         #expect(mailbox.commands.push(AudioControl(gain: 0)))
         render(); render()
         #expect(left.allSatisfy { $0 == 0 })
-        #expect(mailbox.commands.push(AudioControl(kind: 2, sequence: 2)))
+        #expect(mailbox.commands.push(AudioControl(kind: .discontinuity, sequence: 2)))
         render()
         #expect(mailbox.acknowledged.load(ordering: .acquiring) == 2)
         #expect((0..<64).allSatisfy { !renderer.state.pointee.voices[$0].active })

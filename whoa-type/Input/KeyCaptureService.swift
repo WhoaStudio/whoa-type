@@ -130,7 +130,6 @@ nonisolated final class KeyCaptureService: @unchecked Sendable {
     }
     private func checkHealth() {
         guard tap != nil else { return }
-        guard CGPreflightListenEventAccess() else { removeTap(); return }
         if let tap, !CGEvent.tapIsEnabled(tap: tap) { reenableTap() }
     }
     // Lost observation is a discontinuity: held state may be stale, so clear it

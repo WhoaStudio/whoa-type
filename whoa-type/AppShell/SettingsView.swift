@@ -354,6 +354,7 @@ struct SettingsView: View {
 // Configure chrome before installing SwiftUI so no scene can restore a title-bar strip.
 @MainActor
 final class SettingsWindowController: NSWindowController, NSWindowDelegate {
+    private var counted = false
     init(coordinator: AppCoordinator) {
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 640, height: 620),
@@ -377,7 +378,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
     required init?(coder: NSCoder) { nil }
 
     func present() {
-        NSApplication.shared.setActivationPolicy(.regular)
+        if !counted { counted = true; WindowActivation.windowOpened() }
         showWindow(nil)
         window?.deminiaturize(nil)
         window?.makeKeyAndOrderFront(nil)
@@ -385,7 +386,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
     }
 
     func windowWillClose(_ notification: Notification) {
-        NSApplication.shared.setActivationPolicy(.accessory)
+        if counted { counted = false; WindowActivation.windowClosed() }
     }
 }
 
@@ -558,5 +559,21 @@ private struct AboutKeyPressStyle: ButtonStyle {
                     y: configuration.isPressed ? 1 : 4)
             .animation(reduceMotion ? .easeOut(duration: 0.12) : .spring(duration: 0.25, bounce: 0.2),
                        value: configuration.isPressed)
+    }
+}
+
+/// Shows a Dock icon while any of our windows is open and hides it when the last one closes.
+@MainActor
+enum WindowActivation {
+    private static var openWindows = 0
+
+    static func windowOpened() {
+        openWindows += 1
+        NSApplication.shared.setActivationPolicy(.regular)
+    }
+
+    static func windowClosed() {
+        openWindows = max(0, openWindows - 1)
+        if openWindows == 0 { NSApplication.shared.setActivationPolicy(.accessory) }
     }
 }

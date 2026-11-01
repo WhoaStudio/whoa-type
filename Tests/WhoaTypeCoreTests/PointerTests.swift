@@ -71,7 +71,7 @@ struct PointerTests {
         #expect(renderer.state.pointee.voices[1].sample.data == header.samples[up].data)
         #expect(renderer.state.pointee.voices[1].increment == pitch)
         #expect(renderer.state.pointee.pitches[159] == 0)
-        #expect(mailbox.commands.push(AudioControl(kind: 2, sequence: 1)))
+        #expect(mailbox.commands.push(AudioControl(kind: .discontinuity, sequence: 1)))
         render()
         #expect(mailbox.acknowledged.load(ordering: .acquiring) == 1)
         #expect((0..<SoundSlot.count).allSatisfy { renderer.state.pointee.pitches[$0] == 0 })
@@ -122,7 +122,7 @@ struct ClickVariationTests {
             AudioRenderer.trigger(AudioTrigger(slot: slot, phase: .up), state: renderer.state)
         }
         #expect(heard.count == variantCount)
-        #expect(mailbox.commands.push(AudioControl(kind: 2, sequence: 1)))
+        #expect(mailbox.commands.push(AudioControl(kind: .discontinuity, sequence: 1)))
         var l = [Float](repeating: 0, count: 256); var r = l
         l.withUnsafeMutableBufferPointer { left in r.withUnsafeMutableBufferPointer { right in
             AudioRenderer.render(state: renderer.state, triggers: renderer.triggers, mailbox: mailbox, frames: 256,

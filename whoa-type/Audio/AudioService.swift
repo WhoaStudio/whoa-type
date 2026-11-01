@@ -46,10 +46,10 @@ nonisolated final class AudioService: @unchecked Sendable {
     }
     // Caller serializes installs. Both banks remain retained until render ack.
     func install(_ next: PreparedSoundBank) async throws {
-        try await command(kind: 1, next: next)
+        try await command(kind: .bankTransition, next: next)
     }
-    func reset() async throws { try await command(kind: 2, next: nil) }
-    private func command(kind: UInt8, next: PreparedSoundBank?) async throws {
+    func reset() async throws { try await command(kind: .discontinuity, next: nil) }
+    private func command(kind: AudioControl.Kind, next: PreparedSoundBank?) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
             queue.async {
                 guard let engine = self.engine, engine.isRunning else {
@@ -65,7 +65,7 @@ nonisolated final class AudioService: @unchecked Sendable {
                         self.waitForAck(sequence, attempts: 0) { result in
                             // The closure retains next until ack. On failure, stopping
                             // the engine synchronizes callback completion before freeing.
-                            if case .success = result, kind == 1 { self.bank = next }
+                            if case .success = result, kind == .bankTransition { self.bank = next }
                             continuation.resume(with: result)
                         }
                     }

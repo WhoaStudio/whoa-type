@@ -2,6 +2,7 @@ import AppKit
 import Carbon
 import AVFoundation
 import Observation
+import os
 
 @MainActor @Observable
 final class AppCoordinator {
@@ -39,6 +40,8 @@ final class AppCoordinator {
     private var recoveryAttempts = 0
     private var healthTask: Task<Void, Never>?
     private var startupTask: Task<Void, Never>?
+    // Lifecycle diagnostics only; never log input data.
+    private let log = Logger(subsystem: "studio.whoa.type", category: "lifecycle")
     private var observers: [NSObjectProtocol] = []
     private var workspaceObservers: [NSObjectProtocol] = []
     private var dingSound: NSSound?
@@ -76,10 +79,10 @@ final class AppCoordinator {
         dingSignal.resume()
         observeSettings()
         observers.append(NotificationCenter.default.addObserver(forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
-            Task { @MainActor [weak self] in self?.refresh() }
+            MainActor.assumeIsolated { self?.refresh() }
         })
         observers.append(NotificationCenter.default.addObserver(forName: .AVAudioEngineConfigurationChange, object: nil, queue: .main) { [weak self] _ in
-            Task { @MainActor [weak self] in
+            MainActor.assumeIsolated {
                 guard let self, self.audioReady else { return }
                 if self.busy { self.routeChangedWhileBusy = true }
                 else { self.submit(.rebuild) }
@@ -87,10 +90,10 @@ final class AppCoordinator {
         })
         let workspace = NSWorkspace.shared.notificationCenter
         workspaceObservers.append(workspace.addObserver(forName: NSWorkspace.willSleepNotification, object: nil, queue: .main) { [weak self] _ in
-            Task { @MainActor [weak self] in self?.sleeping = true; self?.submit(.reconcile) }
+            MainActor.assumeIsolated { self?.sleeping = true; self?.submit(.reconcile) }
         })
         workspaceObservers.append(workspace.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [weak self] _ in
-            Task { @MainActor [weak self] in self?.sleeping = false; self?.recoveryAttempts = 0; self?.submit(.rebuild) }
+            MainActor.assumeIsolated { self?.sleeping = false; self?.recoveryAttempts = 0; self?.submit(.rebuild) }
         })
         startupTask = Task { await bootstrap() }
         healthTask = Task { [weak self] in
@@ -103,14 +106,15 @@ final class AppCoordinator {
                 self.permission.refresh()
                 var engineRunning = true
                 if self.audioReady { engineRunning = await self.audio.isRunning() }
-                if self.settings.soundEnabled && !engineRunning {
-                    self.submit(.rebuild)
-                } else if wasAuthorized != self.permission.authorized {
-                    self.submit(.reconcile)
-                } else if self.settings.soundEnabled && self.permission.authorized && !self.capture.isActive && self.errorMessage == nil {
-                    if self.recoveryAttempts < 3 {
-                        self.recoveryAttempts += 1; self.submit(.reconcile)
-                    } else { self.captureActive = false }
+                switch HealthAction.decide(soundEnabled: self.settings.soundEnabled, engineRunning: engineRunning,
+                    wasAuthorized: wasAuthorized, authorized: self.permission.authorized,
+                    captureActive: self.capture.isActive, hasError: self.errorMessage != nil,
+                    retries: self.recoveryAttempts) {
+                case .rebuild: self.submit(.rebuild)
+                case .reconcile: self.submit(.reconcile)
+                case .retryCapture: self.recoveryAttempts += 1; self.submit(.reconcile)
+                case .giveUp: self.captureActive = false
+                case .none: break
                 }
             }
         }
@@ -153,7 +157,10 @@ final class AppCoordinator {
             }
             loading = false
             submit(.reconcile)
-        } catch { loading = false; errorMessage = error.localizedDescription }
+        } catch {
+            loading = false; errorMessage = error.localizedDescription
+            log.error("Pack discovery failed: \(error.localizedDescription, privacy: .public)")
+        }
     }
     private func configureEffects() async {
         var callback: (@Sendable () -> Void)?
@@ -278,6 +285,7 @@ final class AppCoordinator {
         } catch {
             previewing = nil; loading = false
             errorMessage = error.localizedDescription
+            log.error("Audio or pack failure: \(error.localizedDescription, privacy: .public)")
             await capture.pause(); captureActive = false
             // Failed candidate loads leave the current bank retained and the saved
             // selection untouched. Clear voices, and stop if no live bank remains.
