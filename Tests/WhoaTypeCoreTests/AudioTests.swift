@@ -44,7 +44,7 @@ struct AudioTests {
     @Test func bundledPacksValidateAndConvert() async throws {
         let repository = SoundPackRepository()
         let packs = try await repository.discover(in: Self.resourceRoot)
-        let expectedFolders: Set<String> = ["alpacas", "blackink", "bluealps", "boxnavy", "buckling", "keychron-q3-bluex", "mxblack", "mxblue", "mxbrown", "nkcream2", "nkcream3", "osu", "redink", "topre", "turquoise", "typewriter"]
+        let expectedFolders: Set<String> = ["alpacas", "blackink", "bluealps", "boxnavy", "buckling", "mxblack", "mxblue", "mxbrown", "nkcream2", "nkcream3", "osu", "redink", "topre", "turquoise", "typewriter"]
         #expect(Set(packs.map { $0.root.lastPathComponent }) == expectedFolders)
         #expect(Set(packs.map(\.name)).count == packs.count)
         for pack in packs {

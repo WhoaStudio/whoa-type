@@ -1,6 +1,6 @@
 # GitHub and Homebrew distribution
 
-Repository: https://github.com/WhoaStudio/Whoa-Typer. The Homebrew cask lives in
+Repository: https://github.com/WhoaStudio/whoa-type. The Homebrew cask lives in
 `Casks/whoa-type.rb` here. Releases require macOS 26.5+ and contain arm64 and x86_64.
 
 ## Release

@@ -8,11 +8,5 @@ struct whoa_typeApp: App {
             MenuBarView(coordinator: coordinator)
         }
         .menuBarExtraStyle(.window)
-        .commands {
-            CommandGroup(replacing: .appSettings) {
-                Button("Whoa Type Settings…") { coordinator.showSettings() }
-                    .keyboardShortcut(",")
-            }
-        }
     }
 }

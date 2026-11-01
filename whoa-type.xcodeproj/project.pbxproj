@@ -169,9 +169,6 @@
 				Resources/SoundPacks/buckling/prepared/spacebar.wav,
 				"Resources/SoundPacks/buckling/spacebar-up.wav",
 				Resources/SoundPacks/buckling/spacebar.wav,
-				"Resources/SoundPacks/cherry-mx-black/samples/.gitkeep",
-				Resources/SoundPacks/cream/samples/.gitkeep,
-				"Resources/SoundPacks/milky-yellow/samples/.gitkeep",
 				"Resources/SoundPacks/mxblack/backspace-up.wav",
 				Resources/SoundPacks/mxblack/backspace.wav,
 				Resources/SoundPacks/mxblack/config.json,
@@ -684,7 +681,6 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Whoa Type";
 				INFOPLIST_KEY_CFBundleName = "Whoa Type";
@@ -697,7 +693,6 @@
 				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "ugolin-olle.whoa-type";
 				PRODUCT_NAME = "Whoa Type";
-				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -719,7 +714,6 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Whoa Type";
 				INFOPLIST_KEY_CFBundleName = "Whoa Type";
@@ -732,7 +726,6 @@
 				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "ugolin-olle.whoa-type";
 				PRODUCT_NAME = "Whoa Type";
-				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;

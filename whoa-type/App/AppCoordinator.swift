@@ -5,10 +5,10 @@ import Observation
 
 @MainActor @Observable
 final class AppCoordinator {
-    var settings = SettingsStore()
+    let settings = SettingsStore()
     let permission = PermissionController()
     let loginItem = LoginItemService()
-    var hotkey = SoundHotkey()
+    let hotkey = SoundHotkey()
     private var introWindow: IntroWindowController?
     private var settingsWindow: SettingsWindowController?
 
@@ -29,6 +29,10 @@ final class AppCoordinator {
     private let repository = SoundPackRepository()
     private let requests: PreviewController
     private var installedID: String?
+    // Decoded banks for the selected pack and the one being auditioned, so restoring
+    // the selection after a preview does not decode it again. Invalidated on rate change.
+    private var bankCache: [String: PreparedSoundBank] = [:]
+    private var bankCacheRate = 0.0
     private var sleeping = false
     private var quitting = false
     private var busy = false
@@ -38,8 +42,11 @@ final class AppCoordinator {
     private var observers: [NSObjectProtocol] = []
     private var workspaceObservers: [NSObjectProtocol] = []
     private var dingSound: NSSound?
+    // Signalled from the capture thread without allocating; coalesces bursts onto the main queue.
+    private let dingSignal = DispatchSource.makeUserDataAddSource(queue: .main)
     private var lastEnabled = false
     private var lastVolume = 0.5
+    private var lastEffects: [Double] = []
     private var lastGeometry = KeyboardGeometry.ansi
 
     var state: AppState {
@@ -60,6 +67,13 @@ final class AppCoordinator {
         requests = PreviewController(capture: capture)
         lastEnabled = settings.soundEnabled; lastVolume = settings.volume; lastGeometry = settings.keyboardGeometry
         hotkey.onPress = { [weak self] in self?.settings.soundEnabled.toggle() }
+        dingSignal.setEventHandler { [weak self] in
+            MainActor.assumeIsolated {
+                guard let self, self.settings.soundEnabled, self.settings.returnDingEnabled else { return }
+                self.previewDing()
+            }
+        }
+        dingSignal.resume()
         observeSettings()
         observers.append(NotificationCenter.default.addObserver(forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main) { [weak self] _ in
             Task { @MainActor [weak self] in self?.refresh() }
@@ -83,6 +97,7 @@ final class AppCoordinator {
             while !Task.isCancelled {
                 do { try await Task.sleep(for: .seconds(2)) } catch { return }
                 guard let self else { return }
+                if self.capture.isActive { self.recoveryAttempts = 0 }
                 if self.quitting || self.busy || self.sleeping || !self.settings.soundEnabled { continue }
                 let wasAuthorized = self.permission.authorized
                 self.permission.refresh()
@@ -107,8 +122,12 @@ final class AppCoordinator {
         } onChange: { [weak self] in
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                self.audio.setGain(self.settings.volume)
-                await self.configureEffects()
+                if self.settings.volume != self.lastVolume { self.audio.setGain(self.settings.volume) }
+                let effects = [self.settings.effectsVolume, self.settings.mouseSoundsEnabled ? 1 : 0, self.settings.returnDingEnabled ? 1 : 0]
+                if effects != self.lastEffects {
+                    self.lastEffects = effects
+                    await self.configureEffects()
+                }
                 let lifecycleChanged = self.lastEnabled != self.settings.soundEnabled || self.lastGeometry != self.settings.keyboardGeometry
                 self.lastEnabled = self.settings.soundEnabled
                 self.lastVolume = self.settings.volume
@@ -122,7 +141,7 @@ final class AppCoordinator {
         if !settings.onboardingCompleted && introWindow == nil {
             introWindow = IntroWindowController(coordinator: self)
             introWindow?.showWindow(nil)
-            NSApplication.shared.activate(ignoringOtherApps: true)
+            NSApplication.shared.activate()
         }
         loading = true
         do {
@@ -139,12 +158,8 @@ final class AppCoordinator {
     private func configureEffects() async {
         var callback: (@Sendable () -> Void)?
         if settings.returnDingEnabled {
-            callback = { [weak self] in
-                Task<Void, Never> { @MainActor [weak self] in
-                    guard let self, self.settings.soundEnabled, self.settings.returnDingEnabled else { return }
-                    self.previewDing()
-                }
-            }
+            let signal = dingSignal
+            callback = { signal.add(data: 1) }
         }
         await capture.configureEffects(mouse: settings.mouseSoundsEnabled, gain: settings.effectsVolume, returnDing: callback)
     }
@@ -171,11 +186,17 @@ final class AppCoordinator {
             loading = true
             defer { loading = false }
             let generation = requests.generation
-            let bank = try await repository.load(pack, rate: rate, isCurrent: { generation.matches(revision) })
+            if bankCacheRate != rate { bankCache.removeAll(); bankCacheRate = rate }
+            let bank: PreparedSoundBank
+            if let cached = bankCache[id] { bank = cached } else {
+                bank = try await repository.load(pack, rate: rate, isCurrent: { generation.matches(revision) })
+            }
             guard generation.matches(revision) else { throw CancellationError() }
             await capture.pause(); captureActive = false
             try await audio.install(bank)
             installedID = id
+            bankCache[id] = bank
+            bankCache = bankCache.filter { $0.key == id || $0.key == settings.selectedPackID }
         }
         audioReady = true
         routeDescription = await audio.routeDescription()
@@ -276,7 +297,7 @@ final class AppCoordinator {
     }
     func quit() {
         guard !quitting else { return }
-        quitting = true; healthTask?.cancel()
+        quitting = true; healthTask?.cancel(); hotkey.invalidate()
         Task {
             await requests.shutdown()
             await startupTask?.value
@@ -312,7 +333,17 @@ final class SoundHotkey {
         register()
     }
 
+    /// Unregisters the hotkey and removes the Carbon handler, which holds an unretained pointer to `self`.
+    func invalidate() {
+        if let reference { UnregisterEventHotKey(reference) }
+        reference = nil
+        if let handler { RemoveEventHandler(handler) }
+        handler = nil
+        onPress = nil
+    }
+
     private func register() {
+        guard handler != nil else { return }
         if let reference { UnregisterEventHotKey(reference) }
         reference = nil
         let defaults = UserDefaults.standard

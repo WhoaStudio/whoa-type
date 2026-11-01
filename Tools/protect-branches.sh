@@ -3,8 +3,11 @@
 # The stable branch must exist. Confirm the build check runs on PR heads
 # before enabling required checks.
 # This script intentionally does not modify workflows.
+# NOTE: the Release workflow pushes the cask commit directly to stable, which these
+# rules block. Before applying them, add a ruleset bypass for github-actions[bot]
+# or change the workflow to open a cask pull request instead.
 set -euo pipefail
-repo="${1:-WhoaStudio/Whoa-Typer}"
+repo="${1:-WhoaStudio/whoa-type}"
 branch=stable
 gh api --method PUT "repos/$repo/branches/$branch/protection" --input - <<'JSON'
 {

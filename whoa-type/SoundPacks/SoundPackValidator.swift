@@ -13,7 +13,9 @@ nonisolated enum SoundPackValidator {
         }
         return url
     }
-    static func validate(_ m: SoundPackManifest, root: URL, rate: Double) throws -> [String: URL] {
+    /// `inspectAudio: false` skips opening each WAV (used for cheap discovery at launch;
+    /// `SoundPackRepository.load` always validates fully before decoding).
+    static func validate(_ m: SoundPackManifest, root: URL, rate: Double, inspectAudio: Bool = true) throws -> [String: URL] {
         guard m.schemaVersion == 1, !m.id.isEmpty, !m.displayName.isEmpty,
               m.gainDB.isFinite, (-24...0).contains(m.gainDB),
               m.pitchCents.min.isFinite, m.pitchCents.max.isFinite,
@@ -56,6 +58,7 @@ nonisolated enum SoundPackValidator {
         for path in paths {
             let url = try file(path, in: root)
             guard url.pathExtension.lowercased() == "wav" else { throw PackError.invalid("Only PCM WAV is accepted") }
+            guard inspectAudio else { files[path] = url; continue }
             let audio = try AVAudioFile(forReading: url)
             let format = audio.fileFormat
             let bits = format.streamDescription.pointee.mBitsPerChannel

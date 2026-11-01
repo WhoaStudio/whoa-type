@@ -1,4 +1,5 @@
 import SwiftUI
+import ImageIO
 
 private enum SettingsPane: String, CaseIterable, Identifiable {
     case playback = "Sound"
@@ -380,7 +381,7 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
         showWindow(nil)
         window?.deminiaturize(nil)
         window?.makeKeyAndOrderFront(nil)
-        NSApplication.shared.activate(ignoringOtherApps: true)
+        NSApplication.shared.activate()
     }
 
     func windowWillClose(_ notification: Notification) {
@@ -450,6 +451,16 @@ private struct SettingsGroup<Content: View>: View {
     }
 }
 
+nonisolated private func wallpaperThumbnail(_ url: URL) -> CGImage? {
+    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
+    let options: [CFString: Any] = [
+        kCGImageSourceCreateThumbnailFromImageAlways: true,
+        kCGImageSourceCreateThumbnailWithTransform: true,
+        kCGImageSourceThumbnailMaxPixelSize: 1200
+    ]
+    return CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary)
+}
+
 struct AboutKeyBanner: View {
     let preview: () -> Void
     @State private var wallpaper: NSImage?
@@ -466,7 +477,11 @@ struct AboutKeyBanner: View {
             wallpaper = nil
             return
         }
-        wallpaper = NSImage(contentsOf: url)
+        // Decode a downsampled thumbnail off the main thread; full wallpapers can be tens of MB.
+        Task {
+            let thumbnail = await Task.detached(priority: .utility) { wallpaperThumbnail(url) }.value
+            wallpaper = thumbnail.map { NSImage(cgImage: $0, size: .zero) }
+        }
     }
 
     var body: some View {

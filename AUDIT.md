@@ -35,6 +35,34 @@ Static risks to check when you build:
 
 ---
 
+## Remediation status (second commit on this branch)
+
+**Nothing below has been compiled or run.** There is still no Swift/Xcode toolchain in this environment, so every code change is unverified until `xcodebuild … build` and `swift test` pass on a Mac (the new `ci.yml` will do this on the PR).
+
+| Finding | Status |
+|---|---|
+| C1 licensing | **Partly fixed.** Removed `keychron-q3-bluex` (and its test entry). The other 15 packs still have no recorded licence or provenance, so they are not resolved. That needs the maintainer's decision. |
+| H1 capture recovery | Fixed: tap is re-enabled in place, held state cleared, attempt counter reset while capture is healthy. |
+| H2 hover preview | Fixed: 250 ms debounce plus a bank cache so restoring the selection doesn't re-decode. Live capture is still paused during an audition (not changed). |
+| H3 CI gate | Fixed: added `.github/workflows/ci.yml` (job `build`) and a `swift test` step before the release build. `protect-branches.sh` now warns that the cask push to `stable` needs a bypass; the workflow itself is unchanged. |
+| H4 Swift 5 vs 6 mode | **Not changed.** Flipping `SWIFT_VERSION`/default isolation without a compiler would likely break the build. `CLAUDE.md` now documents the difference. |
+| M1 Return ding | Fixed: capture thread now signals a `DispatchSource` instead of creating a `Task`. The ding still plays through `NSSound`, not the renderer. |
+| M2 launch validation | Fixed: discovery skips per-WAV inspection (`inspectAudio: false`); `load` still validates fully. |
+| M3 wallpaper | Fixed: downsampled thumbnail decoded off the main thread. |
+| M4 CI hygiene | Partly fixed: `actions/checkout` pinned to a commit, keychain import uses `-T` instead of `-A`. Job-level permission scoping not done. |
+| M5 hotkey lifetime | Fixed: `let` properties, `invalidate()` called on quit. |
+| M6 settings tasks | Partly fixed: gain and effects are only re-sent when they change. Still one task per change. |
+| M7 entitlements | Fixed: removed `ENABLE_USER_SELECTED_FILES` and `REGISTER_APP_GROUPS`. |
+| M8 coordinator tests | Not done. |
+| L1, L3, L6, L9, L10 | Fixed (`activate()`, hash-based pack colour, no force unwraps in the loader, removed the ineffective `.commands`, shared scheme added). |
+| L4 | Partly: removed three empty pack folders. The unreferenced original WAVs remain because the importer and docs treat them as retained sources. |
+| L2, L5, L7, L8, L11, L12 | Not done (L11, the bundle ID, would reset users' preferences and permission). |
+| D1–D9 | Fixed in README, CLAUDE.md, ARCHITECTURE, SCAFFOLD, PRIVACY, VALIDATION, and all `Whoa-Typer` links. README has no real screenshots (needs a Mac); it uses the existing banner image. |
+
+Findings below are as originally reported against `2efdf7a`.
+
+---
+
 ## Top 5 — fix first
 
 | # | Severity | Finding | Where |
