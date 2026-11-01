@@ -5,10 +5,10 @@ import Observation
 
 @MainActor @Observable
 final class AppCoordinator {
-    let settings = SettingsStore()
+    var settings = SettingsStore()
     let permission = PermissionController()
     let loginItem = LoginItemService()
-    let hotkey = SoundHotkey()
+    var hotkey = SoundHotkey()
     private var introWindow: IntroWindowController?
     private var settingsWindow: SettingsWindowController?
 

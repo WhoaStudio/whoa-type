@@ -50,7 +50,7 @@ Static risks to check when you build:
 | M2 launch validation | Fixed: discovery skips per-WAV inspection (`inspectAudio: false`); `load` still validates fully. |
 | M3 wallpaper | Fixed: downsampled thumbnail decoded off the main thread. |
 | M4 CI hygiene | Fixed: pinning and permission scoping came from upstream PR #2; the keychain import here uses `-T` instead of `-A`. |
-| M5 hotkey lifetime | Fixed: `let` properties, `invalidate()` called on quit. |
+| M5 hotkey lifetime | Partly fixed: `invalidate()` removes the handler on quit. The properties stay `var` because SwiftUI bindings (`$coordinator.settings.x`) need them. |
 | M6 settings tasks | Partly fixed: gain and effects are only re-sent when they change. Still one task per change. |
 | M7 entitlements | Fixed: removed `ENABLE_USER_SELECTED_FILES` and `REGISTER_APP_GROUPS`. |
 | M8 coordinator tests | Not done. |
