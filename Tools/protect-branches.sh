@@ -3,8 +3,9 @@
 # The stable branch must exist. Confirm the build check runs on PR heads
 # before enabling required checks.
 # This script intentionally does not modify workflows.
+# Keep required approvals at zero until an independent reviewer is added.
 set -euo pipefail
-repo="${1:-WhoaStudio/Whoa-Typer}"
+repo="${1:-WhoaStudio/whoa-type}"
 branch=stable
 gh api --method PUT "repos/$repo/branches/$branch/protection" --input - <<'JSON'
 {
@@ -12,7 +13,7 @@ gh api --method PUT "repos/$repo/branches/$branch/protection" --input - <<'JSON'
   "enforce_admins": true,
   "required_pull_request_reviews": {
     "dismiss_stale_reviews": true,
-    "required_approving_review_count": 1
+    "required_approving_review_count": 0
   },
   "restrictions": null,
   "allow_force_pushes": false,
