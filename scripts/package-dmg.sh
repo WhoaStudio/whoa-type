@@ -29,11 +29,13 @@ hdiutil create -ov -fs HFS+ -format UDRW -volname "Whoa Type $version" \
   -srcfolder "$work/root" "$work/layout.dmg"
 hdiutil attach -readwrite -noautoopen -mountpoint "$work/mount" "$work/layout.dmg"
 mounted=true
-# Hosted CI cannot grant interactive Finder automation permission.
-if [[ ${CI:-} != true ]]; then
-  osascript "$assets/layout.applescript" "$work/mount"
-  [[ -s "$work/mount/.DS_Store" ]] || { echo 'Finder did not save the DMG layout.' >&2; exit 1; }
-fi
+# Generate Finder metadata directly, including an alias for this image's background.
+# A private environment keeps packaging dependencies out of the app and host Python.
+python3 -m venv "$work/python"
+"$work/python/bin/python" -m pip --quiet install -r "$assets/requirements.txt"
+"$work/python/bin/python" "$assets/write-layout.py" "$work/mount"
+[[ -s "$work/mount/.DS_Store" ]] || { echo 'Missing DMG layout.' >&2; exit 1; }
+
 sync
 hdiutil detach "$work/mount"
 mounted=false
