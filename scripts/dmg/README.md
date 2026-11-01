@@ -2,9 +2,12 @@
 
 `scripts/build-dmg.sh <version>` calls `scripts/package-dmg.sh` after the app
 build and app notarization, before DMG signing and notarization. Packaging uses
-only macOS tools: `hdiutil`, `tiffutil`, and Finder via `osascript`. It requires
-a logged-in GUI session with permission to automate Finder; layout failures
-abort packaging rather than producing an unstyled release.
+macOS tools `hdiutil` and `tiffutil`, plus Python with pinned `ds-store` and
+`mac-alias` packaging dependencies installed into a temporary environment.
+`write-layout.py` writes Finder metadata and a background alias against the
+mounted image, including on GitHub Actions. No GUI session or Finder automation
+permission is required. Layout failures abort packaging. The AppleScript is
+retained as a reference for the original interactive layout.
 
 The window bounds are `{160, 120, 800, 560}` (640 × 440 points). Icons are
 96 points, centered at `{160, 207}` and `{480, 207}`, with labels below.
