@@ -1,0 +1,872 @@
+{
+  "schemaVersion": 1,
+  "id": "mv-02742ecb10204a3794e99d58ca6b9231",
+  "displayName": "Keychron Q3 Blue",
+  "license": "LICENSE.txt",
+  "gainDB": -12,
+  "pitchCents": {
+    "min": 0,
+    "max": 0
+  },
+  "samples": {
+    "KeyA": {
+      "down": [
+        "KeyA-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyS": {
+      "down": [
+        "KeyS-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyD": {
+      "down": [
+        "KeyD-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyF": {
+      "down": [
+        "KeyF-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyH": {
+      "down": [
+        "KeyH-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyG": {
+      "down": [
+        "KeyG-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyZ": {
+      "down": [
+        "KeyZ-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyX": {
+      "down": [
+        "KeyX-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyC": {
+      "down": [
+        "KeyC-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyV": {
+      "down": [
+        "KeyV-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyB": {
+      "down": [
+        "KeyB-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyQ": {
+      "down": [
+        "KeyQ-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyW": {
+      "down": [
+        "KeyW-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyE": {
+      "down": [
+        "KeyE-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyR": {
+      "down": [
+        "KeyR-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyY": {
+      "down": [
+        "KeyY-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyT": {
+      "down": [
+        "KeyT-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyU": {
+      "down": [
+        "KeyU-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyO": {
+      "down": [
+        "KeyO-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyI": {
+      "down": [
+        "KeyI-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyP": {
+      "down": [
+        "KeyP-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyL": {
+      "down": [
+        "KeyL-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyJ": {
+      "down": [
+        "KeyJ-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyK": {
+      "down": [
+        "KeyK-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyN": {
+      "down": [
+        "KeyN-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "KeyM": {
+      "down": [
+        "KeyM-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit1": {
+      "down": [
+        "Digit1-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit2": {
+      "down": [
+        "Digit2-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit3": {
+      "down": [
+        "Digit3-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit4": {
+      "down": [
+        "Digit4-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit5": {
+      "down": [
+        "Digit5-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit6": {
+      "down": [
+        "Digit6-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit7": {
+      "down": [
+        "Digit7-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit8": {
+      "down": [
+        "Digit8-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit9": {
+      "down": [
+        "Digit9-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Digit0": {
+      "down": [
+        "Digit0-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Equal": {
+      "down": [
+        "Equal-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Minus": {
+      "down": [
+        "Minus-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "BracketRight": {
+      "down": [
+        "BracketRight-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "BracketLeft": {
+      "down": [
+        "BracketLeft-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Quote": {
+      "down": [
+        "Quote-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Semicolon": {
+      "down": [
+        "Semicolon-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Comma": {
+      "down": [
+        "Comma-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Slash": {
+      "down": [
+        "Slash-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Period": {
+      "down": [
+        "Period-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Backquote": {
+      "down": [
+        "Backquote-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Enter": {
+      "down": [
+        "Enter-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Tab": {
+      "down": [
+        "Tab-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Space": {
+      "down": [
+        "Space-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Backspace": {
+      "down": [
+        "Backspace-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Escape": {
+      "down": [
+        "Escape-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "ShiftLeft": {
+      "down": [
+        "ShiftLeft-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "CapsLock": {
+      "down": [
+        "CapsLock-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "AltLeft": {
+      "down": [
+        "AltLeft-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "ControlLeft": {
+      "down": [
+        "ControlLeft-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Delete": {
+      "down": [
+        "Delete-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Home": {
+      "down": [
+        "Home-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "End": {
+      "down": [
+        "End-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "PageUp": {
+      "down": [
+        "PageUp-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "PageDown": {
+      "down": [
+        "PageDown-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "ArrowLeft": {
+      "down": [
+        "ArrowLeft-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "ArrowRight": {
+      "down": [
+        "ArrowRight-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "ArrowDown": {
+      "down": [
+        "ArrowDown-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "ArrowUp": {
+      "down": [
+        "ArrowUp-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "NumpadEnter": {
+      "down": [
+        "NumpadEnter-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F1": {
+      "down": [
+        "F1-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F2": {
+      "down": [
+        "F2-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F3": {
+      "down": [
+        "F3-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F4": {
+      "down": [
+        "F4-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F5": {
+      "down": [
+        "F5-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F6": {
+      "down": [
+        "F6-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F7": {
+      "down": [
+        "F7-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F8": {
+      "down": [
+        "F8-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F9": {
+      "down": [
+        "F9-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F10": {
+      "down": [
+        "F10-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F11": {
+      "down": [
+        "F11-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "F12": {
+      "down": [
+        "F12-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad0": {
+      "down": [
+        "Numpad0-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad1": {
+      "down": [
+        "Numpad1-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad2": {
+      "down": [
+        "Numpad2-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad3": {
+      "down": [
+        "Numpad3-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad4": {
+      "down": [
+        "Numpad4-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad5": {
+      "down": [
+        "Numpad5-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad6": {
+      "down": [
+        "Numpad6-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad7": {
+      "down": [
+        "Numpad7-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad8": {
+      "down": [
+        "Numpad8-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "Numpad9": {
+      "down": [
+        "Numpad9-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "NumpadDecimal": {
+      "down": [
+        "NumpadDecimal-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "NumpadMultiply": {
+      "down": [
+        "NumpadMultiply-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    },
+    "NumpadAdd": {
+      "down": [
+        "NumpadAdd-0.wav"
+      ],
+      "up": [
+        "release.wav"
+      ]
+    }
+  },
+  "fallbackGroup": "KeyA",
+  "keyGroups": {},
+  "keys": {
+    "0": "KeyA",
+    "1": "KeyS",
+    "2": "KeyD",
+    "3": "KeyF",
+    "4": "KeyH",
+    "5": "KeyG",
+    "6": "KeyZ",
+    "7": "KeyX",
+    "8": "KeyC",
+    "9": "KeyV",
+    "11": "KeyB",
+    "12": "KeyQ",
+    "13": "KeyW",
+    "14": "KeyE",
+    "15": "KeyR",
+    "16": "KeyY",
+    "17": "KeyT",
+    "31": "KeyO",
+    "32": "KeyU",
+    "34": "KeyI",
+    "35": "KeyP",
+    "37": "KeyL",
+    "38": "KeyJ",
+    "40": "KeyK",
+    "45": "KeyN",
+    "46": "KeyM",
+    "18": "Digit1",
+    "19": "Digit2",
+    "20": "Digit3",
+    "21": "Digit4",
+    "23": "Digit5",
+    "22": "Digit6",
+    "26": "Digit7",
+    "28": "Digit8",
+    "25": "Digit9",
+    "29": "Digit0",
+    "24": "Equal",
+    "27": "Minus",
+    "30": "BracketRight",
+    "33": "BracketLeft",
+    "39": "Quote",
+    "41": "Semicolon",
+    "43": "Comma",
+    "44": "Slash",
+    "47": "Period",
+    "50": "Backquote",
+    "36": "Enter",
+    "48": "Tab",
+    "49": "Space",
+    "51": "Backspace",
+    "53": "Escape",
+    "56": "ShiftLeft",
+    "57": "CapsLock",
+    "58": "AltLeft",
+    "59": "ControlLeft",
+    "60": "ShiftLeft",
+    "61": "AltLeft",
+    "62": "ControlLeft",
+    "117": "Delete",
+    "115": "Home",
+    "119": "End",
+    "116": "PageUp",
+    "121": "PageDown",
+    "123": "ArrowLeft",
+    "124": "ArrowRight",
+    "125": "ArrowDown",
+    "126": "ArrowUp",
+    "76": "NumpadEnter",
+    "122": "F1",
+    "120": "F2",
+    "99": "F3",
+    "118": "F4",
+    "96": "F5",
+    "97": "F6",
+    "98": "F7",
+    "100": "F8",
+    "101": "F9",
+    "109": "F10",
+    "103": "F11",
+    "111": "F12",
+    "82": "Numpad0",
+    "83": "Numpad1",
+    "84": "Numpad2",
+    "85": "Numpad3",
+    "86": "Numpad4",
+    "87": "Numpad5",
+    "88": "Numpad6",
+    "89": "Numpad7",
+    "91": "Numpad8",
+    "92": "Numpad9",
+    "65": "NumpadDecimal",
+    "67": "NumpadMultiply",
+    "69": "NumpadAdd"
+  },
+  "preview": [
+    {
+      "atMs": 0,
+      "keyCode": 0,
+      "phase": "down"
+    },
+    {
+      "atMs": 90,
+      "keyCode": 0,
+      "phase": "up"
+    },
+    {
+      "atMs": 220,
+      "keyCode": 5,
+      "phase": "down"
+    },
+    {
+      "atMs": 310,
+      "keyCode": 5,
+      "phase": "up"
+    },
+    {
+      "atMs": 440,
+      "keyCode": 37,
+      "phase": "down"
+    },
+    {
+      "atMs": 530,
+      "keyCode": 37,
+      "phase": "up"
+    },
+    {
+      "atMs": 660,
+      "keyCode": 49,
+      "phase": "down"
+    },
+    {
+      "atMs": 760,
+      "keyCode": 49,
+      "phase": "up"
+    }
+  ]
+}

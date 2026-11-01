@@ -1,0 +1,3 @@
+Source: https://mechvibes.com/sound-packs/amazin-keychron-q3-bluex
+Author: bluecxmbo
+Converted from v2 timing slices to mono PCM WAV for Whoa Type. Silent releases: source contains press recordings only.

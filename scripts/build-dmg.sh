@@ -1,0 +1,48 @@
+#!/bin/bash
+# Shared local/CI packager. With no signing configuration, builds unsigned.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+[[ $# == 1 ]] || { echo 'Usage: scripts/build-dmg.sh <version>' >&2; exit 1; }
+version=$1
+python3 scripts/version.py "$version"
+output="${WHOA_RELEASE_DIR:-$PWD/build/release}"
+mkdir -p "$output"
+output=$(cd "$output" && pwd)
+signing=(CODE_SIGNING_ALLOWED=NO)
+signed=false
+if [[ -n ${WHOA_SIGNING_IDENTITY:-} && -n ${WHOA_TEAM_ID:-} && -n ${WHOA_NOTARY_PROFILE:-} ]]; then
+  signed=true
+  signing=(CODE_SIGN_STYLE=Manual "DEVELOPMENT_TEAM=$WHOA_TEAM_ID"
+    "CODE_SIGN_IDENTITY=$WHOA_SIGNING_IDENTITY" OTHER_CODE_SIGN_FLAGS=--timestamp)
+fi
+echo "Building $version (Developer ID signed: $signed)"
+xcodebuild -quiet -project whoa-type.xcodeproj -scheme whoa-type \
+  -configuration Release -destination 'generic/platform=macOS' \
+  -derivedDataPath "$output/DerivedData" ONLY_ACTIVE_ARCH=NO 'ARCHS=arm64 x86_64' \
+  "MARKETING_VERSION=$version" "CURRENT_PROJECT_VERSION=$version" "${signing[@]}" build
+app="$output/DerivedData/Build/Products/Release/Whoa Type.app"
+[[ -d $app ]] || { echo "Missing app: $app" >&2; exit 1; }
+architectures=$(lipo -archs "$app/Contents/MacOS/Whoa Type")
+[[ $architectures == *arm64* && $architectures == *x86_64* ]]
+[[ $(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$app/Contents/Info.plist") == "$version" ]]
+if $signed; then
+  notary_args=(--keychain-profile "$WHOA_NOTARY_PROFILE")
+  if [[ -n ${WHOA_NOTARY_KEYCHAIN:-} ]]; then notary_args+=(--keychain "$WHOA_NOTARY_KEYCHAIN"); fi
+  codesign --verify --deep --strict "$app"
+  ditto -c -k --sequesterRsrc --keepParent "$app" "$output/notarization.zip"
+  xcrun notarytool submit "$output/notarization.zip" "${notary_args[@]}" --wait
+  xcrun stapler staple "$app"
+  xcrun stapler validate "$app"
+  spctl --assess --type execute "$app"
+fi
+dmg="$output/WhoaType-${version}-macOS.dmg"
+scripts/package-dmg.sh "$app" "$version" "$dmg"
+if $signed; then
+  codesign --sign "$WHOA_SIGNING_IDENTITY" --timestamp "$dmg"
+  xcrun notarytool submit "$dmg" "${notary_args[@]}" --wait
+  xcrun stapler staple "$dmg"
+  xcrun stapler validate "$dmg"
+else
+  echo 'Unsigned build: no Developer ID signing or notarization.'
+fi
+shasum -a 256 "$dmg"

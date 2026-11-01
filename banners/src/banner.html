@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  /* Usage: banner.html?w=1500&h=500&layout=wide|og|yt  (s = scale unit, % of height) */
+  :root {
+    --bg: #19191b;
+    --bg2: #232326;
+    --cream: #f6f1e8;
+    --orange: #ff5a14;
+    --amber: #ff9a1a;
+    --muted: #a9a49a;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+  body {
+    font-family: "SF Pro Rounded", ui-rounded, "Nunito", -apple-system, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .banner {
+    position: relative; width: 100vw; height: 100vh; overflow: hidden;
+    background:
+      radial-gradient(60% 90% at var(--gx, 78%) 50%, rgba(255,122,26,.28), transparent 70%),
+      linear-gradient(135deg, var(--bg2), var(--bg) 60%);
+  }
+  /* faint keycap grid, as if a keyboard is behind the scene */
+  .grid {
+    position: absolute; inset: -10%; opacity: .3;
+    background-image:
+      linear-gradient(var(--bg) calc(var(--u) * .12), transparent 0),
+      linear-gradient(90deg, var(--bg) calc(var(--u) * .12), transparent 0);
+    background-size: calc(var(--u) * 1) calc(var(--u) * 1);
+    -webkit-mask-image: radial-gradient(circle at var(--gx, 78%) 50%, #000 0, transparent 65%);
+            mask-image: radial-gradient(circle at var(--gx, 78%) 50%, #000 0, transparent 65%);
+  }
+  .grid::before {
+    content: ""; position: absolute; inset: 0;
+    background: rgba(255,255,255,.06);
+    z-index: -1;
+  }
+  .content {
+    position: absolute; display: flex; align-items: center; gap: calc(var(--u) * .4);
+    left: var(--padx); right: var(--padx); top: 0; bottom: 0;
+  }
+  .key {
+    flex: none; width: calc(var(--k)); aspect-ratio: 825 / 795;
+    background: url(logo.png) 50% 49% / 152% auto no-repeat;
+    filter: drop-shadow(0 calc(var(--k) * .06) calc(var(--k) * .08) rgba(0,0,0,.55));
+  }
+  .text { flex: 1; min-width: 0; }
+  h1 {
+    font-weight: 800; letter-spacing: -.035em; line-height: .95; color: var(--cream);
+    font-size: calc(var(--u) * var(--h1, .9));
+  }
+  h1 { white-space: nowrap; }
+  p {
+    margin-top: calc(var(--u) * .22); color: var(--muted); font-weight: 600;
+    font-size: calc(var(--u) * var(--p, .27)); line-height: 1.25; letter-spacing: -.01em;
+  }
+  .chips { display: flex; gap: calc(var(--u) * .12); margin-top: calc(var(--u) * .3); }
+  .chip {
+    font-weight: 700; color: var(--cream); background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12); border-radius: 999px;
+    padding: calc(var(--u) * .07) calc(var(--u) * .2);
+    font-size: calc(var(--u) * .19);
+  }
+  .chip.hot { background: var(--orange); border-color: transparent; color: #fff; }
+
+  /* layouts */
+  .wide .content { flex-direction: row; }
+  .wide .text { order: 1; } .wide .key { order: 2; }
+  .og .content { flex-direction: row; }
+  .og .text { order: 1; } .og .key { order: 2; }
+  /* YouTube: everything inside the 1546x423 safe area, centred */
+  .yt .content { left: 50%; right: auto; width: 1546px; transform: translateX(-50%); justify-content: center; }
+  .yt .key { order: 1; } .yt .text { order: 2; flex: none; }
+</style>
+</head>
+<body>
+<div id="b" class="banner">
+  <div class="grid"></div>
+  <div class="content">
+    <div class="text">
+      <h1>Whoa Type</h1>
+      <p id="tag">Mechanical keyboard sounds,<br>right from your Mac's menu bar.</p>
+      <div class="chips" id="chips">
+        <span class="chip hot">Native macOS app</span>
+        <span class="chip">Menu bar</span>
+      </div>
+    </div>
+    <div class="key"></div>
+  </div>
+</div>
+<script>
+  const q = new URLSearchParams(location.search);
+  const w = +q.get('w'), h = +q.get('h'), layout = q.get('layout') || 'wide';
+  const b = document.getElementById('b');
+  b.classList.add(layout);
+  // per-format config: u = grid cell / type unit, t = title px, k = keycap px
+  const C = {
+    og:   { u: 120, t: 112, p: 34, k: h * 0.6,  padx: w * 0.08, gx: '80%', chips: 1 },
+    x:    { u: 100, t: 104, p: 30, k: h * 0.7,  padx: w * 0.2, gx: '82%', chips: 1 },
+    li:   { u: 90,  t: 92,  p: 27, k: h * 0.72, padx: w * 0.22, gx: '84%', chips: 0 },
+    yt:   { u: 168, t: 150, p: 40, k: 380,      padx: 0,        gx: '32%', chips: 1 },
+  }[q.get('fmt') || layout];
+  const r = b.style;
+  r.setProperty('--u', C.u + 'px');
+  r.setProperty('--h1', C.t / C.u);
+  r.setProperty('--p', C.p / C.u);
+  r.setProperty('--k', C.k + 'px');
+  r.setProperty('--padx', C.padx + 'px');
+  r.setProperty('--gx', C.gx);
+  if (!C.chips) document.getElementById('chips').style.display = 'none';
+</script>
+</body>
+</html>

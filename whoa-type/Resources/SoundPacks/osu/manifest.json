@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "id": "neptune-osu",
+  "displayName": "osu (by monkeytype)",
+  "gainDB": -12,
+  "pitchCents": {
+    "min": 0,
+    "max": 0
+  },
+  "samples": {
+    "standard": {
+      "down": [
+        "prepared/fallback1.wav",
+        "prepared/fallback2.wav",
+        "prepared/fallback3.wav"
+      ],
+      "up": [
+        "prepared/silence.wav",
+        "prepared/silence.wav",
+        "prepared/silence.wav"
+      ]
+    },
+    "pointer": {
+      "down": [
+        "pointer-down.wav",
+        "pointer-down-1.wav",
+        "pointer-down-2.wav",
+        "pointer-down-3.wav",
+        "pointer-down-4.wav",
+        "pointer-down-5.wav"
+      ],
+      "up": [
+        "pointer-up.wav"
+      ]
+    }
+  },
+  "fallbackGroup": "standard",
+  "keyGroups": {},
+  "keys": {},
+  "preview": [
+    {
+      "atMs": 0,
+      "keyCode": 0,
+      "phase": "down"
+    },
+    {
+      "atMs": 90,
+      "keyCode": 0,
+      "phase": "up"
+    },
+    {
+      "atMs": 220,
+      "keyCode": 49,
+      "phase": "down"
+    },
+    {
+      "atMs": 310,
+      "keyCode": 49,
+      "phase": "up"
+    },
+    {
+      "atMs": 440,
+      "keyCode": 36,
+      "phase": "down"
+    },
+    {
+      "atMs": 530,
+      "keyCode": 36,
+      "phase": "up"
+    }
+  ]
+}

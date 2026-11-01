@@ -1,0 +1,127 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version without v (e.g. 1.2)'
+        required: true
+        type: string
+permissions:
+  contents: write
+concurrency:
+  group: release-stable
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'stable' || github.ref }}
+          fetch-depth: 0
+      - name: Create version commit and tag for a UI release
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          VERSION: ${{ inputs.version }}
+          RELEASE_WATCH: '0'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python3 scripts/version.py "$VERSION"
+          if ! git show-ref --verify --quiet "refs/tags/v$VERSION"; then
+            scripts/release.sh "$VERSION"
+          fi
+          # GITHUB_TOKEN pushes do not trigger another workflow; continue here.
+      - name: Resolve tag and require membership in stable
+        id: release
+        env:
+          EVENT: ${{ github.event_name }}
+          INPUT_VERSION: ${{ inputs.version }}
+        run: |
+          tag="$GITHUB_REF_NAME"
+          if [[ "$EVENT" == workflow_dispatch ]]; then tag="v$INPUT_VERSION"; fi
+          version="${tag#v}"
+          python3 scripts/version.py "$version"
+          git fetch origin stable --tags
+          commit=$(git rev-parse "refs/tags/$tag^{commit}")
+          git merge-base --is-ancestor "$commit" origin/stable || {
+            echo 'Tagged commit is not on stable.' >&2
+            exit 1
+          }
+          git checkout --detach "$commit"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Configure optional signing
+        id: signing
+        env:
+          MACOS_CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_CERTIFICATE_P12_BASE64 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+        run: scripts/configure-signing.sh
+      - name: Build DMG
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: scripts/build-dmg.sh "$VERSION"
+      - name: Publish DMG and generated release notes
+        env:
+          TAG: ${{ steps.release.outputs.tag }}
+          VERSION: ${{ steps.release.outputs.version }}
+          SIGNED: ${{ steps.signing.outputs.signed }}
+        run: |
+          if [[ "$SIGNED" == true ]]; then
+            echo 'Developer ID signed and notarized macOS universal build.' > build/release/notes.md
+          else
+            echo 'Unsigned build: Developer ID signing and Apple notarization were unavailable because signing secrets are missing.' > build/release/notes.md
+          fi
+          # Explicitly select the previous reachable version tag.
+          previous=$(git describe --tags --abbrev=0 --match 'v*' "$TAG^" 2>/dev/null || true)
+          printf '\nCommits in this release:\n' >> build/release/notes.md
+          range="$TAG"
+          if [[ -n "$previous" ]]; then range="$previous..$TAG"; fi
+          git log --format='- %s (%h)' "$range" >> build/release/notes.md
+          args=()
+          if [[ -n "$previous" ]]; then args+=(--notes-start-tag "$previous"); fi
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --verify-tag --draft --title "$TAG" \
+              --generate-notes "${args[@]}" --notes-file build/release/notes.md
+          fi
+          gh release upload "$TAG" "build/release/WhoaType-$VERSION-macOS.dmg" --clobber
+          gh release edit "$TAG" --draft=false
+      - name: Update cask on stable
+        env:
+          VERSION: ${{ steps.release.outputs.version }}
+        run: |
+          artifact="$PWD/build/release/WhoaType-$VERSION-macOS.dmg"
+          git checkout stable
+          git pull --ff-only origin stable
+          python3 Tools/generate-cask.py "$artifact" --version "$VERSION" \
+            --repository "$GITHUB_REPOSITORY"
+          brew tap-new --no-git WhoaStudio/release-validation
+          mkdir -p "$(brew --repository WhoaStudio/release-validation)/Casks"
+          cp Casks/whoa-type.rb "$(brew --repository WhoaStudio/release-validation)/Casks/whoa-type.rb"
+          if brew help trust >/dev/null 2>&1; then
+            brew trust --cask WhoaStudio/release-validation/whoa-type
+          fi
+          brew audit --cask --strict WhoaStudio/release-validation/whoa-type
+          brew style Casks/whoa-type.rb
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add Casks/whoa-type.rb
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(cask): update cask to $VERSION"
+            git push origin HEAD:stable
+          fi
+      - name: Remove signing credentials
+        if: always()
+        run: |
+          keychain="$RUNNER_TEMP/whoa-release.keychain-db"
+          if [[ -f "$keychain" ]]; then security delete-keychain "$keychain"; fi
+          rm -f "$RUNNER_TEMP/whoa-certificate.p12"

@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "id": "test-audio",
+  "displayName": "Synthetic test audio",
+  "gainDB": -12,
+  "pitchCents": {
+    "min": -35,
+    "max": 35
+  },
+  "samples": {
+    "standard": {
+      "down": [
+        "sample.wav"
+      ],
+      "up": [
+        "sample.wav"
+      ]
+    },
+    "pointer": {
+      "down": [
+        "pointer-1.wav",
+        "pointer-2.wav"
+      ],
+      "up": [
+        "pointer-up.wav"
+      ]
+    }
+  },
+  "fallbackGroup": "standard",
+  "keyGroups": {},
+  "keys": {},
+  "preview": [
+    {
+      "atMs": 0,
+      "keyCode": 0,
+      "phase": "down"
+    },
+    {
+      "atMs": 90,
+      "keyCode": 0,
+      "phase": "up"
+    },
+    {
+      "atMs": 220,
+      "keyCode": 49,
+      "phase": "down"
+    },
+    {
+      "atMs": 310,
+      "keyCode": 49,
+      "phase": "up"
+    },
+    {
+      "atMs": 440,
+      "keyCode": 36,
+      "phase": "down"
+    },
+    {
+      "atMs": 530,
+      "keyCode": 36,
+      "phase": "up"
+    }
+  ]
+}

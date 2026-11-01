@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "id": "neptune-mxblack",
+  "displayName": "Cherry Mx Blacks (By kbs.im)",
+  "gainDB": -12,
+  "pitchCents": {
+    "min": 0,
+    "max": 0
+  },
+  "samples": {
+    "standard": {
+      "down": [
+        "prepared/fallback.wav",
+        "prepared/fallback2.wav"
+      ],
+      "up": [
+        "prepared/fallback-up.wav",
+        "prepared/fallback2-up.wav"
+      ]
+    },
+    "enter": {
+      "down": [
+        "prepared/enter.wav"
+      ],
+      "up": [
+        "prepared/enter-up.wav"
+      ]
+    },
+    "space": {
+      "down": [
+        "prepared/spacebar.wav"
+      ],
+      "up": [
+        "prepared/spacebar-up.wav"
+      ]
+    },
+    "backspace": {
+      "down": [
+        "prepared/backspace.wav"
+      ],
+      "up": [
+        "prepared/backspace-up.wav"
+      ]
+    },
+    "pointer": {
+      "down": [
+        "pointer-down.wav",
+        "pointer-down-1.wav",
+        "pointer-down-2.wav",
+        "pointer-down-3.wav",
+        "pointer-down-4.wav",
+        "pointer-down-5.wav"
+      ],
+      "up": [
+        "pointer-up.wav"
+      ]
+    }
+  },
+  "fallbackGroup": "standard",
+  "keyGroups": {},
+  "keys": {
+    "36": "enter",
+    "49": "space",
+    "51": "backspace"
+  },
+  "preview": [
+    {
+      "atMs": 0,
+      "keyCode": 0,
+      "phase": "down"
+    },
+    {
+      "atMs": 90,
+      "keyCode": 0,
+      "phase": "up"
+    },
+    {
+      "atMs": 220,
+      "keyCode": 49,
+      "phase": "down"
+    },
+    {
+      "atMs": 310,
+      "keyCode": 49,
+      "phase": "up"
+    },
+    {
+      "atMs": 440,
+      "keyCode": 36,
+      "phase": "down"
+    },
+    {
+      "atMs": 530,
+      "keyCode": 36,
+      "phase": "up"
+    }
+  ]
+}

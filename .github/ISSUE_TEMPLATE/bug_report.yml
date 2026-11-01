@@ -1,0 +1,27 @@
+name: Bug report
+description: Report a reproducible problem.
+body:
+  - type: textarea
+    id: field-0
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: field-1
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: field-2
+    attributes:
+      label: Expected behavior
+    validations:
+      required: false
+  - type: textarea
+    id: field-3
+    attributes:
+      label: macOS, app version, and hardware
+    validations:
+      required: false

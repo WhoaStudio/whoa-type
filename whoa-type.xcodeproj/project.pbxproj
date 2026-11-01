@@ -1,0 +1,769 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B10000000000000000000002 /* whoa-type/Resources/SoundPacks in Resources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* whoa-type/Resources/SoundPacks */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		3CABDF773095094800983539 /* Whoa Type.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Whoa Type.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B10000000000000000000001 /* whoa-type/Resources/SoundPacks */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "whoa-type/Resources/SoundPacks"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AABBCCDD0011223344556677 /* Exceptions for "whoa-type" folder in "whoa-type" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"Resources/SoundPacks/alpacas/backspace-up.wav",
+				Resources/SoundPacks/alpacas/backspace.wav,
+				Resources/SoundPacks/alpacas/config.json,
+				"Resources/SoundPacks/alpacas/enter-up.wav",
+				Resources/SoundPacks/alpacas/enter.wav,
+				"Resources/SoundPacks/alpacas/fallback-up.wav",
+				Resources/SoundPacks/alpacas/fallback.wav,
+				"Resources/SoundPacks/alpacas/fallback2-up.wav",
+				Resources/SoundPacks/alpacas/fallback2.wav,
+				Resources/SoundPacks/alpacas/manifest.json,
+				"Resources/SoundPacks/alpacas/pointer-down-1.wav",
+				"Resources/SoundPacks/alpacas/pointer-down-2.wav",
+				"Resources/SoundPacks/alpacas/pointer-down-3.wav",
+				"Resources/SoundPacks/alpacas/pointer-down-4.wav",
+				"Resources/SoundPacks/alpacas/pointer-down-5.wav",
+				"Resources/SoundPacks/alpacas/pointer-down.wav",
+				"Resources/SoundPacks/alpacas/pointer-up.wav",
+				"Resources/SoundPacks/alpacas/prepared/backspace-up.wav",
+				Resources/SoundPacks/alpacas/prepared/backspace.wav,
+				"Resources/SoundPacks/alpacas/prepared/enter-up.wav",
+				Resources/SoundPacks/alpacas/prepared/enter.wav,
+				"Resources/SoundPacks/alpacas/prepared/fallback-up.wav",
+				Resources/SoundPacks/alpacas/prepared/fallback.wav,
+				"Resources/SoundPacks/alpacas/prepared/fallback2-up.wav",
+				Resources/SoundPacks/alpacas/prepared/fallback2.wav,
+				Resources/SoundPacks/alpacas/prepared/silence.wav,
+				"Resources/SoundPacks/alpacas/prepared/space-up.wav",
+				Resources/SoundPacks/alpacas/prepared/space.wav,
+				"Resources/SoundPacks/alpacas/space-up.wav",
+				Resources/SoundPacks/alpacas/space.wav,
+				"Resources/SoundPacks/blackink/backspace-up.wav",
+				Resources/SoundPacks/blackink/backspace.wav,
+				Resources/SoundPacks/blackink/config.json,
+				"Resources/SoundPacks/blackink/enter-up.wav",
+				Resources/SoundPacks/blackink/enter.wav,
+				"Resources/SoundPacks/blackink/fallback-up.wav",
+				Resources/SoundPacks/blackink/fallback.wav,
+				"Resources/SoundPacks/blackink/fallback2-up.wav",
+				Resources/SoundPacks/blackink/fallback2.wav,
+				Resources/SoundPacks/blackink/manifest.json,
+				"Resources/SoundPacks/blackink/pointer-down-1.wav",
+				"Resources/SoundPacks/blackink/pointer-down-2.wav",
+				"Resources/SoundPacks/blackink/pointer-down-3.wav",
+				"Resources/SoundPacks/blackink/pointer-down-4.wav",
+				"Resources/SoundPacks/blackink/pointer-down-5.wav",
+				"Resources/SoundPacks/blackink/pointer-down.wav",
+				"Resources/SoundPacks/blackink/pointer-up.wav",
+				"Resources/SoundPacks/blackink/prepared/backspace-up.wav",
+				Resources/SoundPacks/blackink/prepared/backspace.wav,
+				"Resources/SoundPacks/blackink/prepared/enter-up.wav",
+				Resources/SoundPacks/blackink/prepared/enter.wav,
+				"Resources/SoundPacks/blackink/prepared/fallback-up.wav",
+				Resources/SoundPacks/blackink/prepared/fallback.wav,
+				"Resources/SoundPacks/blackink/prepared/fallback2-up.wav",
+				Resources/SoundPacks/blackink/prepared/fallback2.wav,
+				Resources/SoundPacks/blackink/prepared/silence.wav,
+				"Resources/SoundPacks/blackink/prepared/spacebar-up.wav",
+				Resources/SoundPacks/blackink/prepared/spacebar.wav,
+				"Resources/SoundPacks/blackink/spacebar-up.wav",
+				Resources/SoundPacks/blackink/spacebar.wav,
+				"Resources/SoundPacks/bluealps/backspace-up.wav",
+				Resources/SoundPacks/bluealps/backspace.wav,
+				Resources/SoundPacks/bluealps/config.json,
+				"Resources/SoundPacks/bluealps/enter-up.wav",
+				Resources/SoundPacks/bluealps/enter.wav,
+				"Resources/SoundPacks/bluealps/fallback-up.wav",
+				Resources/SoundPacks/bluealps/fallback.wav,
+				"Resources/SoundPacks/bluealps/fallback2-up.wav",
+				Resources/SoundPacks/bluealps/fallback2.wav,
+				Resources/SoundPacks/bluealps/manifest.json,
+				"Resources/SoundPacks/bluealps/pointer-down-1.wav",
+				"Resources/SoundPacks/bluealps/pointer-down-2.wav",
+				"Resources/SoundPacks/bluealps/pointer-down-3.wav",
+				"Resources/SoundPacks/bluealps/pointer-down-4.wav",
+				"Resources/SoundPacks/bluealps/pointer-down-5.wav",
+				"Resources/SoundPacks/bluealps/pointer-down.wav",
+				"Resources/SoundPacks/bluealps/pointer-up.wav",
+				"Resources/SoundPacks/bluealps/prepared/backspace-up.wav",
+				Resources/SoundPacks/bluealps/prepared/backspace.wav,
+				"Resources/SoundPacks/bluealps/prepared/enter-up.wav",
+				Resources/SoundPacks/bluealps/prepared/enter.wav,
+				"Resources/SoundPacks/bluealps/prepared/fallback-up.wav",
+				Resources/SoundPacks/bluealps/prepared/fallback.wav,
+				"Resources/SoundPacks/bluealps/prepared/fallback2-up.wav",
+				Resources/SoundPacks/bluealps/prepared/fallback2.wav,
+				Resources/SoundPacks/bluealps/prepared/silence.wav,
+				"Resources/SoundPacks/bluealps/prepared/spacebar-up.wav",
+				Resources/SoundPacks/bluealps/prepared/spacebar.wav,
+				"Resources/SoundPacks/bluealps/spacebar-up.wav",
+				Resources/SoundPacks/bluealps/spacebar.wav,
+				"Resources/SoundPacks/boxnavy/backspace-up.wav",
+				Resources/SoundPacks/boxnavy/backspace.wav,
+				Resources/SoundPacks/boxnavy/config.json,
+				"Resources/SoundPacks/boxnavy/enter-up.wav",
+				Resources/SoundPacks/boxnavy/enter.wav,
+				"Resources/SoundPacks/boxnavy/fallback-up.wav",
+				Resources/SoundPacks/boxnavy/fallback.wav,
+				"Resources/SoundPacks/boxnavy/fallback2-up.wav",
+				Resources/SoundPacks/boxnavy/fallback2.wav,
+				Resources/SoundPacks/boxnavy/manifest.json,
+				"Resources/SoundPacks/boxnavy/pointer-down-1.wav",
+				"Resources/SoundPacks/boxnavy/pointer-down-2.wav",
+				"Resources/SoundPacks/boxnavy/pointer-down-3.wav",
+				"Resources/SoundPacks/boxnavy/pointer-down-4.wav",
+				"Resources/SoundPacks/boxnavy/pointer-down-5.wav",
+				"Resources/SoundPacks/boxnavy/pointer-down.wav",
+				"Resources/SoundPacks/boxnavy/pointer-up.wav",
+				"Resources/SoundPacks/boxnavy/prepared/backspace-up.wav",
+				Resources/SoundPacks/boxnavy/prepared/backspace.wav,
+				"Resources/SoundPacks/boxnavy/prepared/enter-up.wav",
+				Resources/SoundPacks/boxnavy/prepared/enter.wav,
+				"Resources/SoundPacks/boxnavy/prepared/fallback-up.wav",
+				Resources/SoundPacks/boxnavy/prepared/fallback.wav,
+				"Resources/SoundPacks/boxnavy/prepared/fallback2-up.wav",
+				Resources/SoundPacks/boxnavy/prepared/fallback2.wav,
+				Resources/SoundPacks/boxnavy/prepared/silence.wav,
+				"Resources/SoundPacks/boxnavy/prepared/spacebar-up.wav",
+				Resources/SoundPacks/boxnavy/prepared/spacebar.wav,
+				"Resources/SoundPacks/boxnavy/spacebar-up.wav",
+				Resources/SoundPacks/boxnavy/spacebar.wav,
+				"Resources/SoundPacks/buckling/backspace-up.wav",
+				Resources/SoundPacks/buckling/backspace.wav,
+				Resources/SoundPacks/buckling/config.json,
+				"Resources/SoundPacks/buckling/enter-up.wav",
+				Resources/SoundPacks/buckling/enter.wav,
+				"Resources/SoundPacks/buckling/fallback-up.wav",
+				Resources/SoundPacks/buckling/fallback.wav,
+				"Resources/SoundPacks/buckling/fallback2-up.wav",
+				Resources/SoundPacks/buckling/fallback2.wav,
+				Resources/SoundPacks/buckling/manifest.json,
+				"Resources/SoundPacks/buckling/pointer-down-1.wav",
+				"Resources/SoundPacks/buckling/pointer-down-2.wav",
+				"Resources/SoundPacks/buckling/pointer-down-3.wav",
+				"Resources/SoundPacks/buckling/pointer-down-4.wav",
+				"Resources/SoundPacks/buckling/pointer-down-5.wav",
+				"Resources/SoundPacks/buckling/pointer-down.wav",
+				"Resources/SoundPacks/buckling/pointer-up.wav",
+				"Resources/SoundPacks/buckling/prepared/backspace-up.wav",
+				Resources/SoundPacks/buckling/prepared/backspace.wav,
+				"Resources/SoundPacks/buckling/prepared/enter-up.wav",
+				Resources/SoundPacks/buckling/prepared/enter.wav,
+				"Resources/SoundPacks/buckling/prepared/fallback-up.wav",
+				Resources/SoundPacks/buckling/prepared/fallback.wav,
+				"Resources/SoundPacks/buckling/prepared/fallback2-up.wav",
+				Resources/SoundPacks/buckling/prepared/fallback2.wav,
+				Resources/SoundPacks/buckling/prepared/silence.wav,
+				"Resources/SoundPacks/buckling/prepared/spacebar-up.wav",
+				Resources/SoundPacks/buckling/prepared/spacebar.wav,
+				"Resources/SoundPacks/buckling/spacebar-up.wav",
+				Resources/SoundPacks/buckling/spacebar.wav,
+				"Resources/SoundPacks/cherry-mx-black/samples/.gitkeep",
+				Resources/SoundPacks/cream/samples/.gitkeep,
+				"Resources/SoundPacks/milky-yellow/samples/.gitkeep",
+				"Resources/SoundPacks/mxblack/backspace-up.wav",
+				Resources/SoundPacks/mxblack/backspace.wav,
+				Resources/SoundPacks/mxblack/config.json,
+				"Resources/SoundPacks/mxblack/enter-up.wav",
+				Resources/SoundPacks/mxblack/enter.wav,
+				"Resources/SoundPacks/mxblack/fallback-up.wav",
+				Resources/SoundPacks/mxblack/fallback.wav,
+				"Resources/SoundPacks/mxblack/fallback2-up.wav",
+				Resources/SoundPacks/mxblack/fallback2.wav,
+				Resources/SoundPacks/mxblack/manifest.json,
+				"Resources/SoundPacks/mxblack/pointer-down-1.wav",
+				"Resources/SoundPacks/mxblack/pointer-down-2.wav",
+				"Resources/SoundPacks/mxblack/pointer-down-3.wav",
+				"Resources/SoundPacks/mxblack/pointer-down-4.wav",
+				"Resources/SoundPacks/mxblack/pointer-down-5.wav",
+				"Resources/SoundPacks/mxblack/pointer-down.wav",
+				"Resources/SoundPacks/mxblack/pointer-up.wav",
+				"Resources/SoundPacks/mxblack/prepared/backspace-up.wav",
+				Resources/SoundPacks/mxblack/prepared/backspace.wav,
+				"Resources/SoundPacks/mxblack/prepared/enter-up.wav",
+				Resources/SoundPacks/mxblack/prepared/enter.wav,
+				"Resources/SoundPacks/mxblack/prepared/fallback-up.wav",
+				Resources/SoundPacks/mxblack/prepared/fallback.wav,
+				"Resources/SoundPacks/mxblack/prepared/fallback2-up.wav",
+				Resources/SoundPacks/mxblack/prepared/fallback2.wav,
+				Resources/SoundPacks/mxblack/prepared/silence.wav,
+				"Resources/SoundPacks/mxblack/prepared/spacebar-up.wav",
+				Resources/SoundPacks/mxblack/prepared/spacebar.wav,
+				"Resources/SoundPacks/mxblack/spacebar-up.wav",
+				Resources/SoundPacks/mxblack/spacebar.wav,
+				Resources/SoundPacks/mxblue/config.json,
+				"Resources/SoundPacks/mxblue/fallback-up.wav",
+				Resources/SoundPacks/mxblue/fallback.wav,
+				"Resources/SoundPacks/mxblue/fallback2-up.wav",
+				Resources/SoundPacks/mxblue/fallback2.wav,
+				Resources/SoundPacks/mxblue/manifest.json,
+				"Resources/SoundPacks/mxblue/pointer-down-1.wav",
+				"Resources/SoundPacks/mxblue/pointer-down-2.wav",
+				"Resources/SoundPacks/mxblue/pointer-down-3.wav",
+				"Resources/SoundPacks/mxblue/pointer-down-4.wav",
+				"Resources/SoundPacks/mxblue/pointer-down-5.wav",
+				"Resources/SoundPacks/mxblue/pointer-down.wav",
+				"Resources/SoundPacks/mxblue/pointer-up.wav",
+				"Resources/SoundPacks/mxblue/prepared/fallback-up.wav",
+				Resources/SoundPacks/mxblue/prepared/fallback.wav,
+				"Resources/SoundPacks/mxblue/prepared/fallback2-up.wav",
+				Resources/SoundPacks/mxblue/prepared/fallback2.wav,
+				Resources/SoundPacks/mxblue/prepared/silence.wav,
+				"Resources/SoundPacks/mxbrown/backspace-up.wav",
+				Resources/SoundPacks/mxbrown/backspace.wav,
+				Resources/SoundPacks/mxbrown/config.json,
+				"Resources/SoundPacks/mxbrown/enter-up.wav",
+				Resources/SoundPacks/mxbrown/enter.wav,
+				"Resources/SoundPacks/mxbrown/fallback-up.wav",
+				Resources/SoundPacks/mxbrown/fallback.wav,
+				"Resources/SoundPacks/mxbrown/fallback2-up.wav",
+				Resources/SoundPacks/mxbrown/fallback2.wav,
+				Resources/SoundPacks/mxbrown/manifest.json,
+				"Resources/SoundPacks/mxbrown/pointer-down-1.wav",
+				"Resources/SoundPacks/mxbrown/pointer-down-2.wav",
+				"Resources/SoundPacks/mxbrown/pointer-down-3.wav",
+				"Resources/SoundPacks/mxbrown/pointer-down-4.wav",
+				"Resources/SoundPacks/mxbrown/pointer-down-5.wav",
+				"Resources/SoundPacks/mxbrown/pointer-down.wav",
+				"Resources/SoundPacks/mxbrown/pointer-up.wav",
+				"Resources/SoundPacks/mxbrown/prepared/backspace-up.wav",
+				Resources/SoundPacks/mxbrown/prepared/backspace.wav,
+				"Resources/SoundPacks/mxbrown/prepared/enter-up.wav",
+				Resources/SoundPacks/mxbrown/prepared/enter.wav,
+				"Resources/SoundPacks/mxbrown/prepared/fallback-up.wav",
+				Resources/SoundPacks/mxbrown/prepared/fallback.wav,
+				"Resources/SoundPacks/mxbrown/prepared/fallback2-up.wav",
+				Resources/SoundPacks/mxbrown/prepared/fallback2.wav,
+				Resources/SoundPacks/mxbrown/prepared/silence.wav,
+				"Resources/SoundPacks/mxbrown/prepared/spacebar-up.wav",
+				Resources/SoundPacks/mxbrown/prepared/spacebar.wav,
+				"Resources/SoundPacks/mxbrown/spacebar-up.wav",
+				Resources/SoundPacks/mxbrown/spacebar.wav,
+				"Resources/SoundPacks/nkcream2/backspace-up.wav",
+				Resources/SoundPacks/nkcream2/backspace.wav,
+				Resources/SoundPacks/nkcream2/config.json,
+				"Resources/SoundPacks/nkcream2/enter-up.wav",
+				Resources/SoundPacks/nkcream2/enter.wav,
+				"Resources/SoundPacks/nkcream2/fallback-up.wav",
+				Resources/SoundPacks/nkcream2/fallback.wav,
+				Resources/SoundPacks/nkcream2/manifest.json,
+				"Resources/SoundPacks/nkcream2/pointer-down-1.wav",
+				"Resources/SoundPacks/nkcream2/pointer-down-2.wav",
+				"Resources/SoundPacks/nkcream2/pointer-down-3.wav",
+				"Resources/SoundPacks/nkcream2/pointer-down-4.wav",
+				"Resources/SoundPacks/nkcream2/pointer-down-5.wav",
+				"Resources/SoundPacks/nkcream2/pointer-down.wav",
+				"Resources/SoundPacks/nkcream2/pointer-up.wav",
+				"Resources/SoundPacks/nkcream2/prepared/backspace-up.wav",
+				Resources/SoundPacks/nkcream2/prepared/backspace.wav,
+				"Resources/SoundPacks/nkcream2/prepared/enter-up.wav",
+				Resources/SoundPacks/nkcream2/prepared/enter.wav,
+				"Resources/SoundPacks/nkcream2/prepared/fallback-up.wav",
+				Resources/SoundPacks/nkcream2/prepared/fallback.wav,
+				Resources/SoundPacks/nkcream2/prepared/silence.wav,
+				"Resources/SoundPacks/nkcream2/prepared/spacebar-up.wav",
+				Resources/SoundPacks/nkcream2/prepared/spacebar.wav,
+				"Resources/SoundPacks/nkcream2/spacebar-up.wav",
+				Resources/SoundPacks/nkcream2/spacebar.wav,
+				Resources/SoundPacks/nkcream3/config.json,
+				Resources/SoundPacks/nkcream3/fallback.wav,
+				Resources/SoundPacks/nkcream3/fallback2.wav,
+				Resources/SoundPacks/nkcream3/fallback3.wav,
+				Resources/SoundPacks/nkcream3/fallback4.wav,
+				Resources/SoundPacks/nkcream3/fallback5.wav,
+				Resources/SoundPacks/nkcream3/fallback6.wav,
+				Resources/SoundPacks/nkcream3/manifest.json,
+				"Resources/SoundPacks/nkcream3/pointer-down-1.wav",
+				"Resources/SoundPacks/nkcream3/pointer-down-2.wav",
+				"Resources/SoundPacks/nkcream3/pointer-down-3.wav",
+				"Resources/SoundPacks/nkcream3/pointer-down-4.wav",
+				"Resources/SoundPacks/nkcream3/pointer-down-5.wav",
+				"Resources/SoundPacks/nkcream3/pointer-down.wav",
+				"Resources/SoundPacks/nkcream3/pointer-up.wav",
+				Resources/SoundPacks/nkcream3/prepared/fallback.wav,
+				Resources/SoundPacks/nkcream3/prepared/fallback2.wav,
+				Resources/SoundPacks/nkcream3/prepared/fallback3.wav,
+				Resources/SoundPacks/nkcream3/prepared/fallback4.wav,
+				Resources/SoundPacks/nkcream3/prepared/fallback5.wav,
+				Resources/SoundPacks/nkcream3/prepared/fallback6.wav,
+				Resources/SoundPacks/nkcream3/prepared/silence.wav,
+				Resources/SoundPacks/osu/config.json,
+				Resources/SoundPacks/osu/fallback1.wav,
+				Resources/SoundPacks/osu/fallback2.wav,
+				Resources/SoundPacks/osu/fallback3.wav,
+				Resources/SoundPacks/osu/manifest.json,
+				"Resources/SoundPacks/osu/pointer-down-1.wav",
+				"Resources/SoundPacks/osu/pointer-down-2.wav",
+				"Resources/SoundPacks/osu/pointer-down-3.wav",
+				"Resources/SoundPacks/osu/pointer-down-4.wav",
+				"Resources/SoundPacks/osu/pointer-down-5.wav",
+				"Resources/SoundPacks/osu/pointer-down.wav",
+				"Resources/SoundPacks/osu/pointer-up.wav",
+				Resources/SoundPacks/osu/prepared/fallback1.wav,
+				Resources/SoundPacks/osu/prepared/fallback2.wav,
+				Resources/SoundPacks/osu/prepared/fallback3.wav,
+				Resources/SoundPacks/osu/prepared/silence.wav,
+				"Resources/SoundPacks/redink/backspace-up.wav",
+				Resources/SoundPacks/redink/backspace.wav,
+				Resources/SoundPacks/redink/config.json,
+				"Resources/SoundPacks/redink/enter-up.wav",
+				Resources/SoundPacks/redink/enter.wav,
+				"Resources/SoundPacks/redink/fallback-up.wav",
+				Resources/SoundPacks/redink/fallback.wav,
+				"Resources/SoundPacks/redink/fallback2-up.wav",
+				Resources/SoundPacks/redink/fallback2.wav,
+				Resources/SoundPacks/redink/manifest.json,
+				"Resources/SoundPacks/redink/pointer-down-1.wav",
+				"Resources/SoundPacks/redink/pointer-down-2.wav",
+				"Resources/SoundPacks/redink/pointer-down-3.wav",
+				"Resources/SoundPacks/redink/pointer-down-4.wav",
+				"Resources/SoundPacks/redink/pointer-down-5.wav",
+				"Resources/SoundPacks/redink/pointer-down.wav",
+				"Resources/SoundPacks/redink/pointer-up.wav",
+				"Resources/SoundPacks/redink/prepared/backspace-up.wav",
+				Resources/SoundPacks/redink/prepared/backspace.wav,
+				"Resources/SoundPacks/redink/prepared/enter-up.wav",
+				Resources/SoundPacks/redink/prepared/enter.wav,
+				"Resources/SoundPacks/redink/prepared/fallback-up.wav",
+				Resources/SoundPacks/redink/prepared/fallback.wav,
+				"Resources/SoundPacks/redink/prepared/fallback2-up.wav",
+				Resources/SoundPacks/redink/prepared/fallback2.wav,
+				Resources/SoundPacks/redink/prepared/silence.wav,
+				"Resources/SoundPacks/redink/prepared/spacebar-up.wav",
+				Resources/SoundPacks/redink/prepared/spacebar.wav,
+				"Resources/SoundPacks/redink/spacebar-up.wav",
+				Resources/SoundPacks/redink/spacebar.wav,
+				"Resources/SoundPacks/topre/backspace-up.wav",
+				Resources/SoundPacks/topre/backspace.wav,
+				Resources/SoundPacks/topre/config.json,
+				"Resources/SoundPacks/topre/enter-up.wav",
+				Resources/SoundPacks/topre/enter.wav,
+				"Resources/SoundPacks/topre/fallback-up.wav",
+				Resources/SoundPacks/topre/fallback.wav,
+				"Resources/SoundPacks/topre/fallback2-up.wav",
+				Resources/SoundPacks/topre/fallback2.wav,
+				Resources/SoundPacks/topre/manifest.json,
+				"Resources/SoundPacks/topre/pointer-down-1.wav",
+				"Resources/SoundPacks/topre/pointer-down-2.wav",
+				"Resources/SoundPacks/topre/pointer-down-3.wav",
+				"Resources/SoundPacks/topre/pointer-down-4.wav",
+				"Resources/SoundPacks/topre/pointer-down-5.wav",
+				"Resources/SoundPacks/topre/pointer-down.wav",
+				"Resources/SoundPacks/topre/pointer-up.wav",
+				"Resources/SoundPacks/topre/prepared/backspace-up.wav",
+				Resources/SoundPacks/topre/prepared/backspace.wav,
+				"Resources/SoundPacks/topre/prepared/enter-up.wav",
+				Resources/SoundPacks/topre/prepared/enter.wav,
+				"Resources/SoundPacks/topre/prepared/fallback-up.wav",
+				Resources/SoundPacks/topre/prepared/fallback.wav,
+				"Resources/SoundPacks/topre/prepared/fallback2-up.wav",
+				Resources/SoundPacks/topre/prepared/fallback2.wav,
+				Resources/SoundPacks/topre/prepared/silence.wav,
+				"Resources/SoundPacks/topre/prepared/spacebar-up.wav",
+				Resources/SoundPacks/topre/prepared/spacebar.wav,
+				"Resources/SoundPacks/topre/spacebar-up.wav",
+				Resources/SoundPacks/topre/spacebar.wav,
+				"Resources/SoundPacks/turquoise/backspace-up.wav",
+				Resources/SoundPacks/turquoise/backspace.wav,
+				Resources/SoundPacks/turquoise/config.json,
+				"Resources/SoundPacks/turquoise/enter-up.wav",
+				Resources/SoundPacks/turquoise/enter.wav,
+				"Resources/SoundPacks/turquoise/fallback-up.wav",
+				Resources/SoundPacks/turquoise/fallback.wav,
+				"Resources/SoundPacks/turquoise/fallback2-up.wav",
+				Resources/SoundPacks/turquoise/fallback2.wav,
+				Resources/SoundPacks/turquoise/manifest.json,
+				"Resources/SoundPacks/turquoise/pointer-down-1.wav",
+				"Resources/SoundPacks/turquoise/pointer-down-2.wav",
+				"Resources/SoundPacks/turquoise/pointer-down-3.wav",
+				"Resources/SoundPacks/turquoise/pointer-down-4.wav",
+				"Resources/SoundPacks/turquoise/pointer-down-5.wav",
+				"Resources/SoundPacks/turquoise/pointer-down.wav",
+				"Resources/SoundPacks/turquoise/pointer-up.wav",
+				"Resources/SoundPacks/turquoise/prepared/backspace-up.wav",
+				Resources/SoundPacks/turquoise/prepared/backspace.wav,
+				"Resources/SoundPacks/turquoise/prepared/enter-up.wav",
+				Resources/SoundPacks/turquoise/prepared/enter.wav,
+				"Resources/SoundPacks/turquoise/prepared/fallback-up.wav",
+				Resources/SoundPacks/turquoise/prepared/fallback.wav,
+				"Resources/SoundPacks/turquoise/prepared/fallback2-up.wav",
+				Resources/SoundPacks/turquoise/prepared/fallback2.wav,
+				Resources/SoundPacks/turquoise/prepared/silence.wav,
+				"Resources/SoundPacks/turquoise/prepared/spacebar-up.wav",
+				Resources/SoundPacks/turquoise/prepared/spacebar.wav,
+				"Resources/SoundPacks/turquoise/spacebar-up.wav",
+				Resources/SoundPacks/turquoise/spacebar.wav,
+				Resources/SoundPacks/typewriter/config.json,
+				Resources/SoundPacks/typewriter/fallback1.wav,
+				Resources/SoundPacks/typewriter/fallback2.wav,
+				Resources/SoundPacks/typewriter/fallback3.wav,
+				Resources/SoundPacks/typewriter/fallback4.wav,
+				Resources/SoundPacks/typewriter/fallback5.wav,
+				Resources/SoundPacks/typewriter/fallback6.wav,
+				Resources/SoundPacks/typewriter/manifest.json,
+				"Resources/SoundPacks/typewriter/pointer-down-1.wav",
+				"Resources/SoundPacks/typewriter/pointer-down-2.wav",
+				"Resources/SoundPacks/typewriter/pointer-down-3.wav",
+				"Resources/SoundPacks/typewriter/pointer-down-4.wav",
+				"Resources/SoundPacks/typewriter/pointer-down-5.wav",
+				"Resources/SoundPacks/typewriter/pointer-down.wav",
+				"Resources/SoundPacks/typewriter/pointer-up.wav",
+				Resources/SoundPacks/typewriter/prepared/fallback1.wav,
+				Resources/SoundPacks/typewriter/prepared/fallback2.wav,
+				Resources/SoundPacks/typewriter/prepared/fallback3.wav,
+				Resources/SoundPacks/typewriter/prepared/fallback4.wav,
+				Resources/SoundPacks/typewriter/prepared/fallback5.wav,
+				Resources/SoundPacks/typewriter/prepared/fallback6.wav,
+				Resources/SoundPacks/typewriter/prepared/silence.wav,
+			);
+			target = 3CABDF763095094800983539 /* whoa-type */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		3CABDF793095094800983539 /* whoa-type */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AABBCCDD0011223344556677 /* Exceptions for "whoa-type" folder in "whoa-type" target */,
+			);
+			path = "whoa-type";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3CABDF743095094800983539 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3CABDF6E3095094800983539 = {
+			isa = PBXGroup;
+			children = (
+				3CABDF793095094800983539 /* whoa-type */,
+				B10000000000000000000001 /* whoa-type/Resources/SoundPacks */,
+				3CABDF783095094800983539 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3CABDF783095094800983539 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3CABDF773095094800983539 /* Whoa Type.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3CABDF763095094800983539 /* whoa-type */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3CABDF843095094B00983539 /* Build configuration list for PBXNativeTarget "whoa-type" */;
+			buildPhases = (
+				3CABDF733095094800983539 /* Sources */,
+				3CABDF743095094800983539 /* Frameworks */,
+				3CABDF753095094800983539 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				3CABDF793095094800983539 /* whoa-type */,
+				B10000000000000000000001 /* whoa-type/Resources/SoundPacks */,
+			);
+			name = "whoa-type";
+			packageProductDependencies = (
+			);
+			productName = "Whoa Type";
+			productReference = 3CABDF773095094800983539 /* Whoa Type.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3CABDF6F3095094800983539 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2660;
+				LastUpgradeCheck = 2660;
+				TargetAttributes = {
+					3CABDF763095094800983539 = {
+						CreatedOnToolsVersion = 26.6;
+					};
+				};
+			};
+			buildConfigurationList = 3CABDF723095094800983539 /* Build configuration list for PBXProject "whoa-type" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3CABDF6E3095094800983539;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 3CABDF783095094800983539 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3CABDF763095094800983539 /* whoa-type */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3CABDF753095094800983539 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B10000000000000000000002 /* whoa-type/Resources/SoundPacks in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3CABDF733095094800983539 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		3CABDF823095094B00983539 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 2MPVX5W6KB;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		3CABDF833095094B00983539 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 2MPVX5W6KB;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		3CABDF853095094B00983539 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2MPVX5W6KB;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Whoa Type";
+				INFOPLIST_KEY_CFBundleName = "Whoa Type";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ugolin-olle.whoa-type";
+				PRODUCT_NAME = "Whoa Type";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		3CABDF863095094B00983539 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 2MPVX5W6KB;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Whoa Type";
+				INFOPLIST_KEY_CFBundleName = "Whoa Type";
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "ugolin-olle.whoa-type";
+				PRODUCT_NAME = "Whoa Type";
+				REGISTER_APP_GROUPS = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3CABDF723095094800983539 /* Build configuration list for PBXProject "whoa-type" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3CABDF823095094B00983539 /* Debug */,
+				3CABDF833095094B00983539 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3CABDF843095094B00983539 /* Build configuration list for PBXNativeTarget "whoa-type" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3CABDF853095094B00983539 /* Debug */,
+				3CABDF863095094B00983539 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3CABDF6F3095094800983539 /* Project object */;
+}

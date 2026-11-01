@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest an improvement.
+body:
+  - type: textarea
+    id: field-0
+    attributes:
+      label: Problem or use case
+    validations:
+      required: true
+  - type: textarea
+    id: field-1
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+  - type: textarea
+    id: field-2
+    attributes:
+      label: Alternatives considered
+    validations:
+      required: false
