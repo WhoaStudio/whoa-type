@@ -51,3 +51,34 @@ final class SettingsStore {
         value.isFinite ? min(1, max(0, value)) : 0.5
     }
 }
+
+/// The settings the coordinator reacts to, so "what changed" can be decided (and tested) without UI.
+nonisolated struct SettingsSnapshot: Equatable {
+    var enabled: Bool
+    var volume: Double
+    var geometry: KeyboardGeometry
+    var effectsVolume: Double
+    var mouseSounds: Bool
+    var returnDing: Bool
+
+    struct Changes: Equatable {
+        var volume: Bool
+        var effects: Bool
+        /// Enabling/disabling sound or changing layout needs the capture pipeline reconciled.
+        var lifecycle: Bool
+        var any: Bool { volume || effects || lifecycle }
+    }
+
+    func changes(from old: SettingsSnapshot) -> Changes {
+        Changes(volume: volume != old.volume,
+                effects: effectsVolume != old.effectsVolume || mouseSounds != old.mouseSounds || returnDing != old.returnDing,
+                lifecycle: enabled != old.enabled || geometry != old.geometry)
+    }
+}
+
+extension SettingsStore {
+    var snapshot: SettingsSnapshot {
+        SettingsSnapshot(enabled: soundEnabled, volume: volume, geometry: keyboardGeometry,
+                         effectsVolume: effectsVolume, mouseSounds: mouseSoundsEnabled, returnDing: returnDingEnabled)
+    }
+}

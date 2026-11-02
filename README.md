@@ -65,7 +65,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for module ownership and real-time contra
 
 ## Sound packs
 
-Fifteen filename-based packs from the Neptune archive collection are bundled. Reproduce the import with `python3 Tools/import_soundpacks.py /path/to/zips`; existing destination folders are never overwritten. Each folder keeps its original config and recordings plus prepared PCM samples and a `manifest.json` for the loader.
+Fifteen filename-based packs from the Neptune archive collection are bundled. Reproduce the import with `python3 Tools/import_soundpacks.py /path/to/zips`; existing destination folders are never overwritten. Each folder keeps the pack's `config.json` plus the prepared PCM samples (`prepared/`) and a `manifest.json` for the loader. The original recordings are not stored in the repository; the importer rebuilds from the source ZIPs.
 
 The importer maps named Enter, Space/Spacebar, Backspace and Tab recordings to physical codes 36, 49, 51 and 48; other keys use fallback variants. Release recordings are used when `support-events` is true, otherwise release is silent. Switch names are descriptive labels, not hardware identifications.
 

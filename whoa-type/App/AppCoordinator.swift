@@ -30,10 +30,7 @@ final class AppCoordinator {
     private let repository = SoundPackRepository()
     private let requests: PreviewController
     private var installedID: String?
-    // Decoded banks for the selected pack and the one being auditioned, so restoring
-    // the selection after a preview does not decode it again. Invalidated on rate change.
-    private var bankCache: [String: PreparedSoundBank] = [:]
-    private var bankCacheRate = 0.0
+    private var bankCache = BankCache<PreparedSoundBank>()
     private var sleeping = false
     private var quitting = false
     private var busy = false
@@ -47,10 +44,8 @@ final class AppCoordinator {
     private var dingSound: NSSound?
     // Signalled from the capture thread without allocating; coalesces bursts onto the main queue.
     private let dingSignal = DispatchSource.makeUserDataAddSource(queue: .main)
-    private var lastEnabled = false
-    private var lastVolume = 0.5
-    private var lastEffects: [Double] = []
-    private var lastGeometry = KeyboardGeometry.ansi
+    private var lastSettings = SettingsSnapshot(enabled: false, volume: 0.5, geometry: .ansi,
+        effectsVolume: 1, mouseSounds: true, returnDing: false)
 
     var state: AppState {
         if let errorMessage { return .audioUnavailable(errorMessage) }
@@ -68,7 +63,7 @@ final class AppCoordinator {
         let capture = KeyCaptureService(triggers: audio.triggers)
         self.capture = capture
         requests = PreviewController(capture: capture)
-        lastEnabled = settings.soundEnabled; lastVolume = settings.volume; lastGeometry = settings.keyboardGeometry
+        lastSettings = settings.snapshot
         hotkey.onPress = { [weak self] in self?.settings.soundEnabled.toggle() }
         dingSignal.setEventHandler { [weak self] in
             MainActor.assumeIsolated {
@@ -126,18 +121,15 @@ final class AppCoordinator {
         } onChange: { [weak self] in
             Task { @MainActor [weak self] in
                 guard let self else { return }
-                if self.settings.volume != self.lastVolume { self.audio.setGain(self.settings.volume) }
-                let effects = [self.settings.effectsVolume, self.settings.mouseSoundsEnabled ? 1 : 0, self.settings.returnDingEnabled ? 1 : 0]
-                if effects != self.lastEffects {
-                    self.lastEffects = effects
-                    await self.configureEffects()
-                }
-                let lifecycleChanged = self.lastEnabled != self.settings.soundEnabled || self.lastGeometry != self.settings.keyboardGeometry
-                self.lastEnabled = self.settings.soundEnabled
-                self.lastVolume = self.settings.volume
-                self.lastGeometry = self.settings.keyboardGeometry
-                if lifecycleChanged { self.recoveryAttempts = 0; self.submit(.reconcile) }
+                // Re-arm first and decide synchronously, so changes made while we await below
+                // (a slider drag, say) are neither missed nor applied out of order.
                 self.observeSettings()
+                let current = self.settings.snapshot
+                let changes = current.changes(from: self.lastSettings)
+                self.lastSettings = current
+                if changes.volume { self.audio.setGain(current.volume) }
+                if changes.effects { await self.configureEffects() }
+                if changes.lifecycle { self.recoveryAttempts = 0; self.submit(.reconcile) }
             }
         }
     }
@@ -193,17 +185,15 @@ final class AppCoordinator {
             loading = true
             defer { loading = false }
             let generation = requests.generation
-            if bankCacheRate != rate { bankCache.removeAll(); bankCacheRate = rate }
             let bank: PreparedSoundBank
-            if let cached = bankCache[id] { bank = cached } else {
+            if let cached = bankCache.bank(for: id, rate: rate) { bank = cached } else {
                 bank = try await repository.load(pack, rate: rate, isCurrent: { generation.matches(revision) })
             }
             guard generation.matches(revision) else { throw CancellationError() }
             await capture.pause(); captureActive = false
             try await audio.install(bank)
             installedID = id
-            bankCache[id] = bank
-            bankCache = bankCache.filter { $0.key == id || $0.key == settings.selectedPackID }
+            bankCache.store(bank, id: id, rate: rate, keeping: settings.selectedPackID)
         }
         audioReady = true
         routeDescription = await audio.routeDescription()

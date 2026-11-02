@@ -43,7 +43,7 @@ Static risks to check when you build:
 |---|---|
 | C1 licensing | **Partly fixed.** Removed `keychron-q3-bluex` (and its test entry). The other 15 packs still have no recorded licence or provenance, so they are not resolved. That needs the maintainer's decision. |
 | H1 capture recovery | Fixed: tap is re-enabled in place, held state cleared, attempt counter reset while capture is healthy. |
-| H2 hover preview | Fixed: 250 ms debounce plus a bank cache so restoring the selection doesn't re-decode. Live capture is still paused during an audition (not changed). |
+| H2 hover preview | Fixed: 250 ms debounce plus a bank cache so restoring the selection doesn't re-decode. Live capture is still paused during an audition: auditioning swaps the live bank, and avoiding that needs a second bank/voice group in the renderer. Cache logic is now `BankCache` with tests. |
 | H3 CI gate | Fixed upstream while this branch was open (`stable` @ `c939d5f`, PR #2: `ci.yml`, protected release flow). This branch took that version of the workflow files. |
 | H4 Swift 5 vs 6 mode | Fixed: the app target now compiles in Swift 6 mode (CI green). `Package.swift` still has no default-isolation setting; `CLAUDE.md` says to keep annotations explicit. |
 | M1 Return ding | Fixed: capture thread now signals a `DispatchSource` instead of creating a `Task`. The ding still plays through `NSSound`, not the renderer. |
@@ -51,11 +51,11 @@ Static risks to check when you build:
 | M3 wallpaper | Fixed: downsampled thumbnail decoded off the main thread. |
 | M4 CI hygiene | Fixed: pinning and permission scoping came from upstream PR #2; the keychain import here uses `-T` instead of `-A`. |
 | M5 hotkey lifetime | Partly fixed: `invalidate()` removes the handler on quit. The properties stay `var` because SwiftUI bindings (`$coordinator.settings.x`) need them. |
-| M6 settings tasks | Partly fixed: gain and effects are only re-sent when they change. Still one task per change. |
+| M6 settings tasks | Fixed: the observer re-arms before awaiting (changes made mid-await were previously missed), diffs a `SettingsSnapshot` synchronously, and only re-sends what changed. Unit tested. |
 | M7 entitlements | Fixed: removed `ENABLE_USER_SELECTED_FILES` and `REGISTER_APP_GROUPS`. |
-| M8 coordinator tests | Partly fixed: the capture-recovery rules are a pure `HealthAction.decide` with tests (`HealthPolicyTests`). The coordinator's other state machine (`perform`) is still untested. |
+| M8 coordinator tests | Partly fixed: the capture-recovery rules (`HealthAction`), the settings diff (`SettingsSnapshot`) and the bank cache (`BankCache`) are pure types with unit tests. The coordinator's `perform` state machine itself is still untested. |
 | L1, L3, L6, L9, L10 | Fixed (`activate()`, hash-based pack colour, no force unwraps in the loader, removed the ineffective `.commands`, shared scheme added). |
-| L4 | Partly: removed three empty pack folders. The unreferenced original WAVs (about 1.4 MB) were left in place deliberately: the docs describe them as retained originals and the saving is small. |
+| L4 | Fixed: removed three empty pack folders and 139 unreferenced original WAVs (pack resources 6.3 MB → 2.8 MB). The importer rebuilds from the source ZIPs, not from these files. |
 | L2, L5, L7, L8, L12 | Fixed: reference-counted activation policy, `AudioControl.Kind` enum, duplicate permission poll removed, `os.Logger` lifecycle errors (no input data), `MainActor.assumeIsolated` in main-queue observers. |
 | L11 bundle ID | Not changed: it would reset users' preferences and Input Monitoring permission. Decide before wider adoption. |
 | D1–D9 | Fixed in README, CLAUDE.md, ARCHITECTURE, SCAFFOLD, PRIVACY, VALIDATION, and all `Whoa-Typer` links. README has no real screenshots (needs a Mac); it uses the existing banner image. |

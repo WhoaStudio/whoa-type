@@ -28,7 +28,7 @@ Bank installation and resets use renderer acknowledgements so retained PCM remai
 
 ## Sound-pack contract
 
-`whoa-type/Resources/SoundPacks` contains 15 switch packs, each with `manifest.json`, the original recordings and a `prepared/` folder of PCM samples. Names are descriptive labels, not hardware identifications. Keyboard down/up phases may share the same recording. Pointer presses share six variants without immediate repeats and use a separate release sample.
+`whoa-type/Resources/SoundPacks` contains 15 switch packs, each with `manifest.json`, the source `config.json` and a `prepared/` folder of PCM samples. Names are descriptive labels, not hardware identifications. Keyboard down/up phases may share the same recording. Pointer presses share six variants without immediate repeats and use a separate release sample.
 
 The validator accepts schema version 1, mono PCM WAV at 44.1/48/96 kHz, 16/24-bit integer or Float32, at most 500 ms per sample and 64 MiB decoded per pack. It checks paths, mappings, preview pairing and bounds. License references are optional but validated when present; packs without one are an open release blocker. Recording redistribution rights remain a release requirement.
 
