@@ -35,3 +35,10 @@ or folder icons, window frames, or mockups.
 Follow-up imagegen edit prompt: change only the bottom-center text from
 "Whoa Type" to "Whoa Studio", preserving the font, size, color, centering,
 top instruction, arrow, beige background, and contour shapes.
+
+The onboarding copy is bundled at
+`whoa-type/Assets.xcassets/OnboardingBackground.imageset/OnboardingBackground.png`.
+It was edited from `background@2x.png` with the built-in imagegen tool, using
+this prompt:
+
+> Use case: precise-object-edit. Edit target: supplied Whoa Type DMG background. Create a clean onboarding background by removing all text (the top instruction and bottom Whoa Studio) and the central arrow, seamlessly filling these areas with the surrounding warm beige texture. Preserve the existing canvas proportions, beige texture, exact nested orange/red/ochre contours at upper left, blue contours at bottom left, and charcoal contours at bottom right. Change only the text and arrow removal. No text, symbols, icons or new elements. Save the edited image as an asset for the project.
