@@ -9,7 +9,7 @@ The following results are historical records, not checks rerun by a documentatio
 Environment: Apple M4, macOS 26.7.2, Xcode 26.6 / Swift 6.3.3. Deployment target remains macOS 26.5. The older deployment OS has not been exercised here.
 
 - Xcode Release build for arm64 and x86_64 passes. Only arm64 has been executed locally.
-- 19 Swift Testing tests cover preferences/state, 100,000 concurrent ring records, capacity/wraparound, all 38 pack conversions, malformed manifests, escaping/symlink paths, duplicate IDs, file/memory caps, lookup precedence, pitch pairing/pan/gain/reset, bounded overload, physical geometry/modifier pairs, loader cancellation, serialized latest-request behavior, and synthetic auditions without a tap.
+- 19 Swift Testing tests cover preferences/state, 100,000 concurrent ring records, capacity/wraparound, all bundled pack conversions (16 at the time of the run; 15 now that `keychron-q3-bluex` was removed for licensing), malformed manifests, escaping/symlink paths, duplicate IDs, file/memory caps, lookup precedence, pitch pairing/pan/gain/reset, bounded overload, physical geometry/modifier pairs, loader cancellation, serialized latest-request behavior, and synthetic auditions without a tap.
 - The opt-in real AVAudioEngine test starts silent output, installs a bank, performs twelve bank swaps/resets, and stops after renderer acknowledgements. No input permission is required for this test.
 - Address Sanitizer and Thread Sanitizer runs pass, including the real engine test. They do not establish real-time allocation behavior or hardware latency.
 - UInt64 acquire/release atomics compile to ARM64 `ldapr`/`stlr` instructions on this machine. Other supported hardware still needs runtime validation.

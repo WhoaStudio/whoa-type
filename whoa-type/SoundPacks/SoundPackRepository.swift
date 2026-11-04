@@ -17,7 +17,7 @@ nonisolated final class SoundPackRepository: Sendable {
                         let data = try Data(contentsOf: path, options: .mappedIfSafe)
                         guard data.count <= 1_048_576 else { throw PackError.invalid("Manifest too large") }
                         let m = try JSONDecoder().decode(SoundPackManifest.self, from: data)
-                        _ = try SoundPackValidator.validate(m, root: url, rate: 48000)
+                        _ = try SoundPackValidator.validate(m, root: url, rate: 48000, inspectAudio: false)
                         guard ids.insert(m.id).inserted else { throw PackError.invalid("Duplicate pack ID") }
                         packs.append(SoundPack(root: url, manifest: m))
                     }
@@ -37,7 +37,8 @@ nonisolated final class SoundPackRepository: Sendable {
                     defer { for sample in pcm { sample.data?.deallocate() } }
                     for path in paths {
                         guard isCurrent() else { throw CancellationError() }
-                        let file = try AVAudioFile(forReading: files[path]!)
+                        guard let fileURL = files[path] else { throw PackError.invalid("Missing sample \(path)") }
+                        let file = try AVAudioFile(forReading: fileURL)
                         guard let input = AVAudioPCMBuffer(pcmFormat: file.processingFormat, frameCapacity: AVAudioFrameCount(file.length)),
                               let format = AVAudioFormat(standardFormatWithSampleRate: rate, channels: 1),
                               let converter = AVAudioConverter(from: file.processingFormat, to: format),
@@ -62,13 +63,20 @@ nonisolated final class SoundPackRepository: Sendable {
                         pcm.append(PCMSample(data: storage, count: count))
                     }
                     var variants: [Int] = []; var ranges: [SampleRange] = []
+                    let indexByPath = Dictionary(uniqueKeysWithValues: paths.enumerated().map { ($1, $0) })
+                    func indices(_ entries: [String]) throws -> [Int] {
+                        try entries.map { entry in
+                            guard let index = indexByPath[entry] else { throw PackError.invalid("Unknown sample \(entry)") }
+                            return index
+                        }
+                    }
                     for code in 0..<128 {
                         let m = pack.manifest
                         let name = m.keys[String(code)] ?? m.keyGroups[String(code)] ?? m.fallbackGroup
-                        let group = m.samples[name]!
+                        guard let group = m.samples[name] else { throw PackError.invalid("Unknown sample group \(name)") }
                         for entries in [group.down, group.up] {
                             ranges.append(SampleRange(start: variants.count, count: entries.count))
-                            variants.append(contentsOf: entries.map { paths.firstIndex(of: $0)! })
+                            variants.append(contentsOf: try indices(entries))
                         }
                     }
                     // Reserved pointer group is optional for older keyboard-only packs.
@@ -76,7 +84,7 @@ nonisolated final class SoundPackRepository: Sendable {
                     for _ in 0..<SoundSlot.pointerButtonCount {
                         for entries in [pack.manifest.samples["pointer"]?.down ?? [], pack.manifest.samples["pointer"]?.up ?? []] {
                             ranges.append(SampleRange(start: variants.count, count: entries.count))
-                            variants.append(contentsOf: entries.map { paths.firstIndex(of: $0)! })
+                            variants.append(contentsOf: try indices(entries))
                         }
                     }
                     guard isCurrent() else { throw CancellationError() }

@@ -10,7 +10,6 @@ nonisolated final class KeyCaptureService: @unchecked Sendable {
     private var effectsGain: Float = 1
     private var returnDing: (@Sendable () -> Void)?
     private var pointerHeld: UInt32 = 0
-    private let recovery = Atomic<Bool>(false)
     private let active = Atomic<Bool>(false)
     private let ready = NSCondition()
     private var loop: CFRunLoop!
@@ -78,7 +77,8 @@ nonisolated final class KeyCaptureService: @unchecked Sendable {
                         guard let info else { return Unmanaged.passUnretained(event) }
                         let service = Unmanaged<KeyCaptureService>.fromOpaque(info).takeUnretainedValue()
                         if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
-                            service.recovery.store(true, ordering: .releasing)
+                            // Runs on the capture run loop that owns the tap: re-enable in place.
+                            service.reenableTap()
                         } else { service.receive(type, event) }
                         return Unmanaged.passUnretained(event)
                     }, userInfo: Unmanaged.passUnretained(self).toOpaque())
@@ -130,12 +130,15 @@ nonisolated final class KeyCaptureService: @unchecked Sendable {
     }
     private func checkHealth() {
         guard tap != nil else { return }
-        guard CGPreflightListenEventAccess() else { removeTap(); return }
-        if recovery.exchange(false, ordering: .acquiringAndReleasing) {
-            // Lost observation creates a discontinuity. Stop and let the
-            // coordinator clear the renderer before bounded restart attempts.
-            removeTap()
-        }
+        if let tap, !CGEvent.tapIsEnabled(tap: tap) { reenableTap() }
+    }
+    // Lost observation is a discontinuity: held state may be stale, so clear it
+    // and re-enable the existing tap instead of tearing down and rebuilding.
+    private func reenableTap() {
+        guard let tap else { return }
+        for i in 0..<128 { held[i] = false }
+        pointerHeld = 0
+        CGEvent.tapEnable(tap: tap, enable: true)
     }
     private func removeTap() {
         active.store(false, ordering: .releasing)
@@ -146,7 +149,6 @@ nonisolated final class KeyCaptureService: @unchecked Sendable {
         tap = nil; source = nil
         for i in 0..<128 { held[i] = false }
         pointerHeld = 0
-        recovery.store(false, ordering: .releasing)
     }
     func pause() async {
         await withCheckedContinuation { continuation in

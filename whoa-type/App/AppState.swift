@@ -22,3 +22,21 @@ nonisolated enum AppState: Equatable {
         return captureActive ? .ready : .captureUnavailable
     }
 }
+
+/// What the periodic health check should do. Pure so the recovery rules can be unit tested.
+nonisolated enum HealthAction: Equatable {
+    case none, rebuild, reconcile, retryCapture, giveUp
+
+    static let maxCaptureRetries = 3
+
+    static func decide(soundEnabled: Bool, engineRunning: Bool, wasAuthorized: Bool, authorized: Bool,
+                       captureActive: Bool, hasError: Bool, retries: Int) -> HealthAction {
+        guard soundEnabled else { return .none }
+        if !engineRunning { return .rebuild }
+        if wasAuthorized != authorized { return .reconcile }
+        if authorized && !captureActive && !hasError {
+            return retries < maxCaptureRetries ? .retryCapture : .giveUp
+        }
+        return .none
+    }
+}

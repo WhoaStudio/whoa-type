@@ -28,9 +28,9 @@ Bank installation and resets use renderer acknowledgements so retained PCM remai
 
 ## Sound-pack contract
 
-`whoa-type/Resources/SoundPacks` contains 38 prepared switch packs, each with `manifest.json`, `sample.wav` and pointer samples. Names are descriptive labels, not hardware identifications. Keyboard down/up phases explicitly share the same recording. Pointer presses share six variants without immediate repeats and use a separate release sample.
+`whoa-type/Resources/SoundPacks` contains 15 switch packs, each with `manifest.json`, the source `config.json` and a `prepared/` folder of PCM samples. Names are descriptive labels, not hardware identifications. Keyboard down/up phases may share the same recording. Pointer presses share six variants without immediate repeats and use a separate release sample.
 
-The validator accepts schema version 1, mono PCM WAV at 44.1/48/96 kHz, 16/24-bit integer or Float32, at most 500 ms per sample and 64 MiB decoded per pack. It checks paths, mappings, preview pairing and bounds. License references are optional but validated when present. Recording redistribution rights remain a release requirement.
+The validator accepts schema version 1, mono PCM WAV at 44.1/48/96 kHz, 16/24-bit integer or Float32, at most 500 ms per sample and 64 MiB decoded per pack. It checks paths, mappings, preview pairing and bounds. License references are optional but validated when present; packs without one are an open release blocker. Recording redistribution rights remain a release requirement.
 
 Physical key position controls pan, pitch and tone; key-specific shading makes large keys heavier and modifiers lighter. Pointer sounds are centered and bypass keyboard positional tone shading.
 
@@ -42,4 +42,4 @@ Live capture requires enabled sound, Input Monitoring authorization and prepared
 
 ## Distribution and validation
 
-See [distribution](Docs/DISTRIBUTION.md) for local universal packaging and Developer ID notarization, [validation](Docs/VALIDATION.md) for historical measurements and outstanding interactive checks, and [privacy](Docs/PRIVACY.md) for the input-data contract. CI only creates a manually requested local validation artifact.
+See [distribution](Docs/DISTRIBUTION.md) for local universal packaging and Developer ID notarization, [validation](Docs/VALIDATION.md) for historical measurements and outstanding interactive checks, and [privacy](Docs/PRIVACY.md) for the input-data contract. `ci.yml` builds and tests every pull request; the Release workflow tests, builds and publishes the DMG and cask.

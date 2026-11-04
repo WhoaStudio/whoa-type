@@ -44,7 +44,7 @@ struct AudioTests {
     @Test func bundledPacksValidateAndConvert() async throws {
         let repository = SoundPackRepository()
         let packs = try await repository.discover(in: Self.resourceRoot)
-        let expectedFolders: Set<String> = ["alpacas", "blackink", "bluealps", "boxnavy", "buckling", "keychron-q3-bluex", "mxblack", "mxblue", "mxbrown", "nkcream2", "nkcream3", "osu", "redink", "topre", "turquoise", "typewriter"]
+        let expectedFolders: Set<String> = ["alpacas", "blackink", "bluealps", "boxnavy", "buckling", "mxblack", "mxblue", "mxbrown", "nkcream2", "nkcream3", "osu", "redink", "topre", "turquoise", "typewriter"]
         #expect(Set(packs.map { $0.root.lastPathComponent }) == expectedFolders)
         #expect(Set(packs.map(\.name)).count == packs.count)
         for pack in packs {
@@ -68,7 +68,7 @@ struct AudioTests {
                 AudioRenderer.render(state: renderer.state, triggers: ring, mailbox: mailbox, frames: 256, left: l.baseAddress!, right: r.baseAddress!)
             }}
         }
-        #expect(mailbox.commands.push(AudioControl(kind: 1, bank: bank.header, sequence: 1)))
+        #expect(mailbox.commands.push(AudioControl(kind: .bankTransition, bank: bank.header, sequence: 1)))
         render()
         #expect(mailbox.acknowledged.load(ordering: .acquiring) == 1)
         #expect(ring.push(AudioTrigger(slot: 0, phase: .down, pan: -1)))
@@ -84,7 +84,7 @@ struct AudioTests {
         #expect(mailbox.commands.push(AudioControl(gain: 0)))
         render(); render()
         #expect(left.allSatisfy { $0 == 0 })
-        #expect(mailbox.commands.push(AudioControl(kind: 2, sequence: 2)))
+        #expect(mailbox.commands.push(AudioControl(kind: .discontinuity, sequence: 2)))
         render()
         #expect(mailbox.acknowledged.load(ordering: .acquiring) == 2)
         #expect((0..<64).allSatisfy { !renderer.state.pointee.voices[$0].active })

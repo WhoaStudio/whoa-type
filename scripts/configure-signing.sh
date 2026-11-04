@@ -16,7 +16,7 @@ security create-keychain -p "$password" "$keychain"
 security set-keychain-settings -lut 21600 "$keychain"
 security unlock-keychain -p "$password" "$keychain"
 security import "$RUNNER_TEMP/whoa-certificate.p12" -P "$MACOS_CERTIFICATE_PASSWORD" \
-  -A -t cert -f pkcs12 -k "$keychain" >/dev/null
+  -T /usr/bin/codesign -T /usr/bin/productsign -t cert -f pkcs12 -k "$keychain" >/dev/null
 security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$password" "$keychain" >/dev/null
 security list-keychains -d user -s "$keychain" "$HOME/Library/Keychains/login.keychain-db"
 xcrun notarytool store-credentials whoa-release --keychain "$keychain" \

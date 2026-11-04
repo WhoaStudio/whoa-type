@@ -1,4 +1,5 @@
 import SwiftUI
+import ImageIO
 
 private enum SettingsPane: String, CaseIterable, Identifiable {
     case playback = "Sound"
@@ -353,6 +354,7 @@ struct SettingsView: View {
 // Configure chrome before installing SwiftUI so no scene can restore a title-bar strip.
 @MainActor
 final class SettingsWindowController: NSWindowController, NSWindowDelegate {
+    private var counted = false
     init(coordinator: AppCoordinator) {
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 640, height: 620),
@@ -376,15 +378,15 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
     required init?(coder: NSCoder) { nil }
 
     func present() {
-        NSApplication.shared.setActivationPolicy(.regular)
+        if !counted { counted = true; WindowActivation.windowOpened() }
         showWindow(nil)
         window?.deminiaturize(nil)
         window?.makeKeyAndOrderFront(nil)
-        NSApplication.shared.activate(ignoringOtherApps: true)
+        NSApplication.shared.activate()
     }
 
     func windowWillClose(_ notification: Notification) {
-        NSApplication.shared.setActivationPolicy(.accessory)
+        if counted { counted = false; WindowActivation.windowClosed() }
     }
 }
 
@@ -450,6 +452,16 @@ private struct SettingsGroup<Content: View>: View {
     }
 }
 
+nonisolated private func wallpaperThumbnail(_ url: URL) -> CGImage? {
+    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
+    let options: [CFString: Any] = [
+        kCGImageSourceCreateThumbnailFromImageAlways: true,
+        kCGImageSourceCreateThumbnailWithTransform: true,
+        kCGImageSourceThumbnailMaxPixelSize: 1200
+    ]
+    return CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary)
+}
+
 struct AboutKeyBanner: View {
     let preview: () -> Void
     @State private var wallpaper: NSImage?
@@ -466,7 +478,11 @@ struct AboutKeyBanner: View {
             wallpaper = nil
             return
         }
-        wallpaper = NSImage(contentsOf: url)
+        // Decode a downsampled thumbnail off the main thread; full wallpapers can be tens of MB.
+        Task {
+            let thumbnail = await Task.detached(priority: .utility) { wallpaperThumbnail(url) }.value
+            wallpaper = thumbnail.map { NSImage(cgImage: $0, size: .zero) }
+        }
     }
 
     var body: some View {
@@ -543,5 +559,21 @@ private struct AboutKeyPressStyle: ButtonStyle {
                     y: configuration.isPressed ? 1 : 4)
             .animation(reduceMotion ? .easeOut(duration: 0.12) : .spring(duration: 0.25, bounce: 0.2),
                        value: configuration.isPressed)
+    }
+}
+
+/// Shows a Dock icon while any of our windows is open and hides it when the last one closes.
+@MainActor
+enum WindowActivation {
+    private static var openWindows = 0
+
+    static func windowOpened() {
+        openWindows += 1
+        NSApplication.shared.setActivationPolicy(.regular)
+    }
+
+    static func windowClosed() {
+        openWindows = max(0, openWindows - 1)
+        if openWindows == 0 { NSApplication.shared.setActivationPolicy(.accessory) }
     }
 }

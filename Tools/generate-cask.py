@@ -8,7 +8,7 @@ from pathlib import Path
 parser = argparse.ArgumentParser(description=__doc__)
 parser.add_argument('artifact', type=Path)
 parser.add_argument('--version', required=True)
-parser.add_argument('--repository', default='WhoaStudio/Whoa-Typer')
+parser.add_argument('--repository', default='WhoaStudio/whoa-type')
 parser.add_argument('--url', help='Override download URL for local validation')
 parser.add_argument('--output', type=Path, default=Path('Casks/whoa-type.rb'))
 args = parser.parse_args()

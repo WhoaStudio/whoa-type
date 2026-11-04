@@ -8,7 +8,7 @@ latest commit when possible.
 ## Private reporting
 
 Report suspected vulnerabilities to WhoaStudio using
-[GitHub private vulnerability reporting](https://github.com/WhoaStudio/Whoa-Typer/security/advisories/new).
+[GitHub private vulnerability reporting](https://github.com/WhoaStudio/whoa-type/security/advisories/new).
 Do not publish vulnerabilities, exploit details, or sensitive logs in public issues.
 Include the affected version, impact, reproduction steps, and a minimal example.
 Remove credentials and personal information from attachments.

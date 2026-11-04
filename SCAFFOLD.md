@@ -9,6 +9,6 @@ The module folders in ARCHITECTURE.md now contain the implementation. The app ta
 - `SoundPacks`: manifest validation, immutable PCM banks, loader and latest-request serialization.
 - `Permissions`: Input Monitoring preflight, request and settings guidance.
 - `Settings`: versioned preferences and actual SMAppService status.
-- `Resources/SoundPacks/switch-01` through `switch-38`: named PCM packs derived from the existing recordings.
+- `Resources/SoundPacks/<pack>`: 15 imported packs, each with a manifest, its source config and prepared PCM samples.
 
-`python3 Tools/prepare_soundpacks.py /path/to/originals` reproduces asset conversion with macOS afconvert from external source recordings; loose source audio is not bundled. `Tools/benchmark.sh` runs only synthetic audio work. `Tools/CaptureProbe` is a separate disposable feasibility app. Release and manual-validation status is recorded in `Docs`.
+`python3 Tools/prepare_soundpacks.py /path/to/originals` reproduces asset conversion with macOS afconvert from external source recordings; loose source audio is not bundled. `Tools/benchmark.sh` runs only synthetic audio work. `Tools/CaptureProbe/main.swift` is a standalone feasibility probe that is not built by the project or CI. Release and manual-validation status is recorded in `Docs`.

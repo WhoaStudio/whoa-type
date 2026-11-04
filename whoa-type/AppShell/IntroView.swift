@@ -4,7 +4,6 @@ import AppKit
 @MainActor
 final class IntroWindowController: NSWindowController, NSWindowDelegate {
     private let coordinator: AppCoordinator
-    private let previousActivationPolicy = NSApplication.shared.activationPolicy()
     init(coordinator: AppCoordinator) {
         self.coordinator = coordinator
         let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 420, height: 720),
@@ -20,12 +19,12 @@ final class IntroWindowController: NSWindowController, NSWindowDelegate {
         })
         window.delegate = self
         window.center()
-        NSApplication.shared.setActivationPolicy(.regular)
+        WindowActivation.windowOpened()
     }
     required init?(coder: NSCoder) { nil }
     func windowWillClose(_ notification: Notification) {
         coordinator.settings.onboardingCompleted = true
-        NSApplication.shared.setActivationPolicy(previousActivationPolicy)
+        WindowActivation.windowClosed()
     }
 }
 
