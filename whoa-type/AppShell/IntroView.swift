@@ -55,17 +55,25 @@ private struct IntroView: View {
             IntroLogoKey { coordinator.previewKey() }
                 .disabled(coordinator.packs.isEmpty)
             Text("Intro").font(.system(size: 26, weight: .bold))
-            Button {
-                if !coordinator.permission.authorized { coordinator.permission.request() }
-            } label: {
-                Label(coordinator.permission.authorized ? "Whoa Type is authorized." : "Authorize Input Monitoring",
-                      systemImage: coordinator.permission.authorized ? "checkmark.seal.fill" : "lock.fill")
+            if coordinator.permission.authorized {
+                Label("Whoa Type is authorized.", systemImage: "checkmark.seal.fill")
                     .font(.system(size: 14, weight: .semibold))
-                    .padding(12)
-                    .background(.white.opacity(0.7), in: Capsule())
+                    .foregroundStyle(.teal)
+            } else {
+                Button {
+                    coordinator.permission.request()
+                    coordinator.permission.openSystemSettings()
+                } label: {
+                    Label("Open Input Monitoring Settings", systemImage: "lock.fill")
+                        .font(.system(size: 14, weight: .semibold))
+                        .padding(.horizontal, 4)
+                        .padding(.vertical, 4)
+                }
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .tint(Color(red: 0.65, green: 0.22, blue: 0.10))
+                .help("Enable Whoa Type in System Settings → Privacy & Security → Input Monitoring")
             }
-            .buttonStyle(.plain)
-            .tint(.teal)
             Text("Choose your preferred switch set.")
                 .font(.system(size: 14, weight: .medium)).foregroundStyle(.secondary)
                 .padding(.top, 10)
@@ -125,8 +133,6 @@ private struct IntroView: View {
             if let error = coordinator.errorMessage {
                 Text(error).font(.caption).foregroundStyle(.secondary)
             }
-            Text("Use the menu bar icon for more switches and preferences.")
-                .multilineTextAlignment(.center).foregroundStyle(.secondary)
             Toggle("Launch Whoa Type at Login", isOn: Binding(
                 get: { coordinator.loginItem.enabled }, set: { coordinator.loginItem.setEnabled($0) }))
                 .toggleStyle(.checkbox)
@@ -137,7 +143,13 @@ private struct IntroView: View {
         }
         .padding(32).padding(.top, 12)
         .frame(width: 420, height: 720)
-        .background(Color(nsColor: .windowBackgroundColor))
+        .background {
+            Image("OnboardingBackground")
+                .resizable()
+                .ignoresSafeArea()
+                .accessibilityHidden(true)
+        }
+        .preferredColorScheme(.light)
         .scaleEffect(appeared || reduceMotion ? 1 : 0.97)
         .opacity(appeared ? 1 : 0)
         .animation(reduceMotion ? nil : .easeOut(duration: 0.24), value: appeared)
