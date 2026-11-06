@@ -85,6 +85,26 @@ import Testing
             #expect(restored.effectsVolume == 0.5)
         }
     }
+    @Test func menuBarPreferencesDefaultAndPersist() {
+        withDefaults { defaults in
+            let first = SettingsStore(defaults: defaults)
+            #expect(first.menuBarDisplay == .none)
+            #expect(first.menuBarClickAction == .showMenu)
+            #expect(!first.disableMenuBarIconOpacity)
+            #expect(!first.disableSwitchPreviewOnHover)
+
+            first.menuBarDisplay = .switchName
+            first.menuBarClickAction = .toggleKeySounds
+            first.disableMenuBarIconOpacity = true
+            first.disableSwitchPreviewOnHover = true
+
+            let restored = SettingsStore(defaults: defaults)
+            #expect(restored.menuBarDisplay == .switchName)
+            #expect(restored.menuBarClickAction == .toggleKeySounds)
+            #expect(restored.disableMenuBarIconOpacity)
+            #expect(restored.disableSwitchPreviewOnHover)
+        }
+    }
     @Test func effectiveSoundRequiresAllGates() {
         #expect(AppState.resolve(enabled: false, authorized: true, audioReady: true, captureActive: true) == .soundOff)
         #expect(AppState.resolve(enabled: true, authorized: false, audioReady: true, captureActive: true) == .permissionRequired)

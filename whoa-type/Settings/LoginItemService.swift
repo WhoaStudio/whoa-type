@@ -7,6 +7,8 @@ final class LoginItemService {
     private(set) var status = SMAppService.mainApp.status
     private(set) var errorMessage: String?
     var enabled: Bool { status == .enabled }
+    var registrationRequested: Bool { enabled || requiresApproval }
+    var requiresApproval: Bool { status == .requiresApproval }
     var message: String {
         if let errorMessage { return errorMessage }
         switch status {
