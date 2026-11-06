@@ -14,6 +14,12 @@ xcodebuild -project whoa-type.xcodeproj -scheme whoa-type -destination 'platform
 swift test
 ```
 
+The project does not select a maintainer's Apple Developer team. For a local
+signed build, select your own team in Xcode's Signing & Capabilities pane without
+committing that personal setting, or pass `DEVELOPMENT_TEAM=YOUR_TEAM_ID` to
+`xcodebuild`. For a build without signing, pass `CODE_SIGNING_ALLOWED=NO`.
+Release signing uses the environment variables in [distribution](Docs/DISTRIBUTION.md).
+
 See [README](README.md) for permissions and manual testing, and
 [validation](Docs/VALIDATION.md) for release checks. Never commit signing
 credentials, personal Xcode settings, or generated build artifacts.

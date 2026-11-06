@@ -24,6 +24,10 @@ open -a "Whoa Type"
 
 Releases built without signing credentials are unsigned and not notarized, and their release notes say so. macOS may block those downloads from opening.
 
+### First launch: opening an unsigned release
+
+If macOS blocks Whoa Type, open it once from Applications, then go to **System Settings → Privacy & Security** and choose **Open Anyway** in the Security section. Confirm the prompt; macOS will remember the exception. See [Apple’s instructions](https://support.apple.com/102445).
+
 ## Using it
 
 Whoa Type lives in the menu bar and starts with sound off.

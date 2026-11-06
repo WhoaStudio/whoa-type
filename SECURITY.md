@@ -13,7 +13,6 @@ Do not publish vulnerabilities, exploit details, or sensitive logs in public iss
 Include the affected version, impact, reproduction steps, and a minimal example.
 Remove credentials and personal information from attachments.
 
-A repository administrator must enable private vulnerability reporting under
-Settings → Code security before this channel can accept reports. If the form is
-unavailable, ask @WhoaStudio in a public issue to enable private reporting,
-without disclosing vulnerability details. No response-time guarantee is currently set.
+If the private reporting form is unavailable, email
+[hello@ugolin-olle.com](mailto:hello@ugolin-olle.com).
+No response-time guarantee is currently set.

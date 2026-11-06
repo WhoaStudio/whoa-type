@@ -189,7 +189,7 @@ struct SettingsView: View {
 
     @ViewBuilder private var inputAccessSettingsGroups: some View {
         SettingsGroup("Input Access") {
-            PermissionOnboardingView(permission: coordinator.permission, retry: coordinator.refresh)
+            PermissionOnboardingView(permission: coordinator.permission)
         }
         SettingsGroup("Password fields") {
             Text("macOS Secure Input can pause keyboard sounds while you enter a password. Sounds resume when secure input ends.")
@@ -223,6 +223,7 @@ struct SettingsView: View {
     }
 
     @ViewBuilder private var startupSettingsGroups: some View {
+        UpdateSettingsView(updater: coordinator.updater)
         SettingsGroup {
             Toggle("Start Whoa Type at login", isOn: Binding(
                 get: { coordinator.loginItem.enabled },
@@ -400,7 +401,7 @@ private extension NSColor {
     }
 }
 
-private struct SettingsGroup<Content: View>: View {
+struct SettingsGroup<Content: View>: View {
     private let content: Content
     private var header: AnyView?
     private var footer: AnyView?

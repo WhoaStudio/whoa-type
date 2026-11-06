@@ -60,6 +60,8 @@ struct MenuBarView: View {
             .keyboardShortcut(",")
             .buttonStyle(MenuRowStyle())
             Divider()
+            CheckForUpdatesButton(updater: coordinator.updater)
+                .buttonStyle(MenuRowStyle())
             Button("Quit \(appName)") { coordinator.quit() }
                 .keyboardShortcut("q")
                 .buttonStyle(MenuRowStyle())

@@ -7,7 +7,7 @@ let package = Package(
     products: [.library(name: "WhoaTypeCore", targets: ["WhoaTypeCore"])],
     targets: [
         .target(name: "WhoaTypeCore", path: "whoa-type",
-            exclude: ["AppShell", "Assets.xcassets", "Permissions", "Resources", "Settings/LoginItemService.swift", "App/AppCoordinator.swift", "whoa_typeApp.swift"],
+            exclude: ["AppShell", "Assets.xcassets", "Permissions", "Resources", "Updates", "Settings/LoginItemService.swift", "App/AppCoordinator.swift", "whoa_typeApp.swift"],
             sources: ["App/AppState.swift", "Settings/SettingsStore.swift", "Input/KeyboardGeometry.swift", "SoundPacks", "Audio", "Input/KeyMapper.swift", "Input/KeyCaptureService.swift", "Input/PointerMapper.swift"]),
         .testTarget(name: "WhoaTypeCoreTests", dependencies: ["WhoaTypeCore"], path: "Tests/WhoaTypeCoreTests")
     ]
