@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B10000000000000000000002 /* whoa-type/Resources/SoundPacks in Resources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* whoa-type/Resources/SoundPacks */; };
+		B10000000000000000000003 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = B10000000000000000000004 /* Sparkle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -305,6 +306,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B10000000000000000000003 /* Sparkle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,6 +351,7 @@
 			);
 			name = "whoa-type";
 			packageProductDependencies = (
+				B10000000000000000000004 /* Sparkle */,
 			);
 			productName = "Whoa Type";
 			productReference = 3CABDF773095094800983539 /* Whoa Type.app */;
@@ -384,6 +387,9 @@
 			projectRoot = "";
 			targets = (
 				3CABDF763095094800983539 /* whoa-type */,
+			);
+			packageReferences = (
+				B10000000000000000000005 /* XCRemoteSwiftPackageReference "Sparkle" */,
 			);
 		};
 /* End PBXProject section */
@@ -626,6 +632,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B10000000000000000000005 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.6.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B10000000000000000000004 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B10000000000000000000005 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 3CABDF6F3095094800983539 /* Project object */;
 }
