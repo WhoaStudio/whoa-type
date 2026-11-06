@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "neptune-redink",
   "displayName": "Gateron Red Inks (By kbs.im)",
-  "gainDB": -12,
+  "gainDB": 0,
   "pitchCents": {
     "min": 0,
     "max": 0

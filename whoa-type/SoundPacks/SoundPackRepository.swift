@@ -58,8 +58,13 @@ nonisolated final class SoundPackRepository: Sendable {
                         for i in 0..<count {
                             guard samples[i].isFinite else { throw PackError.invalid("Nonfinite PCM") }
                         }
+                        // Prepared recordings have inconsistent source levels. Normalize
+                        // each voice independently so the master setting controls playback
+                        // predictably; the renderer's soft limiter handles overlap.
+                        let peak = (0..<count).reduce(Float.zero) { max($0, abs(samples[$1])) }
+                        let normalization = peak > 0 ? min(0.9 / peak, 16) : 1
                         let storage = UnsafeMutablePointer<Float>.allocate(capacity: count)
-                        storage.initialize(from: samples, count: count)
+                        for i in 0..<count { storage[i] = samples[i] * normalization }
                         pcm.append(PCMSample(data: storage, count: count))
                     }
                     var variants: [Int] = []; var ranges: [SampleRange] = []

@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "neptune-osu",
   "displayName": "osu (by monkeytype)",
-  "gainDB": -12,
+  "gainDB": 0,
   "pitchCents": {
     "min": 0,
     "max": 0
