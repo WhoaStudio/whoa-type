@@ -80,7 +80,7 @@ def prepare(archive, staging):
     for path in set(pointer['down'] + pointer['up']):
         shutil.copyfile(ROOT / 'Amber' / path, source / path)
     manifest = dict(schemaVersion=1, id='neptune-' + archive.stem, displayName=config['name'],
-                    gainDB=-12, pitchCents=dict(min=0, max=0), samples=groups,
+                    gainDB=0, pitchCents=dict(min=0, max=0), samples=groups,
                     fallbackGroup='standard', keyGroups={}, keys=mapping,
                     preview=[dict(atMs=t, keyCode=k, phase=phase)
                              for t, k, phase in [(0, 0, 'down'), (90, 0, 'up'),
