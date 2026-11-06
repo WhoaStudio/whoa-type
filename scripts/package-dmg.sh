@@ -21,6 +21,7 @@ cleanup() {
 trap cleanup EXIT
 mkdir -p "$work/root/.background" "$work/mount"
 ditto "$app" "$work/root/Whoa Type.app"
+codesign --verify --deep --strict "$work/root/Whoa Type.app"
 ln -s /Applications "$work/root/Applications"
 # A multi-resolution TIFF lets Finder choose 1x or 2x at the same point size.
 tiffutil -cathidpicheck "$assets/background.png" "$assets/background@2x.png" \
