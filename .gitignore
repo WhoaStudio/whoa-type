@@ -10,3 +10,19 @@ build/
 *.p8
 *.mobileprovision
 *.provisionprofile
+
+# Local signing material and configuration
+*.pem
+*.key
+*.pfx
+id_rsa
+id_ed25519
+*.local.xcconfig
+Signing.xcconfig
+
+# Xcode and Python local output
+DerivedData/
+.venv/
+venv/
+__pycache__/
+*.py[cod]

@@ -9,6 +9,7 @@ final class AppCoordinator {
     var settings = SettingsStore()
     let permission = PermissionController()
     let loginItem = LoginItemService()
+    let updater = UpdateController()
     var hotkey = SoundHotkey()
     private var introWindow: IntroWindowController?
     private var settingsWindow: SettingsWindowController?

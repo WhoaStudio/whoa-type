@@ -1,5 +1,9 @@
 # Protected-branch releases
 
+Auto-update signing/feed setup and the mock-release validation checklist are in
+[UPDATES.md](UPDATES.md). Configure those keys and Developer ID credentials before
+running Release; updater releases require signing and notarization.
+
 Changes to `stable` require a pull request and the `build` check. Required
 approvals are zero while the repository has one maintainer. Add an independent
 reviewer before increasing the approval requirement.

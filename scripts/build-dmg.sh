@@ -9,6 +9,13 @@ output="${WHOA_RELEASE_DIR:-$PWD/build/release}"
 mkdir -p "$output"
 output=$(cd "$output" && pwd)
 signing=(CODE_SIGNING_ALLOWED=NO)
+updater_settings=()
+if [[ -n ${SPARKLE_PUBLIC_ED_KEY:-} ]]; then
+  updater_settings+=("SPARKLE_PUBLIC_ED_KEY=$SPARKLE_PUBLIC_ED_KEY")
+fi
+if [[ -n ${SPARKLE_FEED_URL:-} ]]; then
+  updater_settings+=("SPARKLE_FEED_URL=$SPARKLE_FEED_URL")
+fi
 signed=false
 if [[ -n ${WHOA_SIGNING_IDENTITY:-} && -n ${WHOA_TEAM_ID:-} && -n ${WHOA_NOTARY_PROFILE:-} ]]; then
   signed=true
@@ -19,13 +26,22 @@ echo "Building $version (Developer ID signed: $signed)"
 xcodebuild -quiet -project whoa-type.xcodeproj -scheme whoa-type \
   -configuration Release -destination 'generic/platform=macOS' \
   -derivedDataPath "$output/DerivedData" ONLY_ACTIVE_ARCH=NO 'ARCHS=arm64 x86_64' \
-  "MARKETING_VERSION=$version" "CURRENT_PROJECT_VERSION=$version" "${signing[@]}" build
+  "MARKETING_VERSION=$version" "CURRENT_PROJECT_VERSION=$version" "${updater_settings[@]}" "${signing[@]}" build
 app="$output/DerivedData/Build/Products/Release/Whoa Type.app"
 [[ -d $app ]] || { echo "Missing app: $app" >&2; exit 1; }
 architectures=$(lipo -archs "$app/Contents/MacOS/Whoa Type")
 [[ $architectures == *arm64* && $architectures == *x86_64* ]]
 [[ $(/usr/libexec/PlistBuddy -c 'Print CFBundleShortVersionString' "$app/Contents/Info.plist") == "$version" ]]
 if $signed; then
+  # A plain build does not re-sign Sparkle's nested helpers like archive/export.
+  framework="$app/Contents/Frameworks/Sparkle.framework"
+  for helper in XPCServices/Installer.xpc XPCServices/Downloader.xpc Autoupdate Updater.app; do
+    codesign --force --sign "$WHOA_SIGNING_IDENTITY" --options runtime --timestamp \
+      --preserve-metadata=entitlements "$framework/Versions/B/$helper"
+  done
+  codesign --force --sign "$WHOA_SIGNING_IDENTITY" --options runtime --timestamp "$framework"
+  codesign --force --sign "$WHOA_SIGNING_IDENTITY" --options runtime --timestamp \
+    --preserve-metadata=entitlements "$app"
   notary_args=(--keychain-profile "$WHOA_NOTARY_PROFILE")
   if [[ -n ${WHOA_NOTARY_KEYCHAIN:-} ]]; then notary_args+=(--keychain "$WHOA_NOTARY_KEYCHAIN"); fi
   codesign --verify --deep --strict "$app"

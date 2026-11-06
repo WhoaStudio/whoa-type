@@ -101,7 +101,7 @@ jobs:
           git diff --exit-code -- whoa-type.xcodeproj/project.pbxproj
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-      - name: Configure optional signing
+      - name: Configure release signing
         id: signing
         env:
           MACOS_CERTIFICATE_P12_BASE64: ${{ secrets.MACOS_CERTIFICATE_P12_BASE64 }}
@@ -114,25 +114,27 @@ jobs:
       - name: Build DMG
         env:
           VERSION: ${{ steps.release.outputs.version }}
-        run: scripts/build-dmg.sh "$VERSION"
+          SPARKLE_PUBLIC_ED_KEY: ${{ vars.SPARKLE_PUBLIC_ED_KEY }}
+          SIGNED: ${{ steps.signing.outputs.signed }}
+        run: |
+          [[ "$SIGNED" == true ]] || { echo 'Updater releases require Developer ID signing and notarization.' >&2; exit 1; }
+          [[ -n "$SPARKLE_PUBLIC_ED_KEY" ]] || { echo 'Set the SPARKLE_PUBLIC_ED_KEY repository variable.' >&2; exit 1; }
+          scripts/build-dmg.sh "$VERSION"
       - name: Publish DMG and generated release notes
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.release.outputs.tag }}
           VERSION: ${{ steps.release.outputs.version }}
-          SIGNED: ${{ steps.signing.outputs.signed }}
+          SPARKLE_PRIVATE_ED_KEY: ${{ secrets.SPARKLE_PRIVATE_ED_KEY }}
         run: |
-          if [[ "$SIGNED" == true ]]; then
-            echo 'Developer ID signed and notarized macOS universal build.' > build/release/notes.md
-          else
-            echo 'Unsigned build: Developer ID signing and Apple notarization were unavailable because signing secrets are missing.' > build/release/notes.md
-          fi
+          echo 'Developer ID signed and notarized macOS universal build.' > build/release/notes.md
           # Explicitly select the previous reachable version tag.
           previous=$(git describe --tags --abbrev=0 --match 'v*' "$TAG^" 2>/dev/null || true)
           printf '\nCommits in this release:\n' >> build/release/notes.md
           range="$TAG"
           if [[ -n "$previous" ]]; then range="$previous..$TAG"; fi
           git log --format='- %s (%h)' "$range" >> build/release/notes.md
+          scripts/generate-update-feed.sh "$VERSION"
           args=()
           if [[ -n "$previous" ]]; then args+=(--notes-start-tag "$previous"); fi
           if ! gh release view "$TAG" >/dev/null 2>&1; then
@@ -140,6 +142,7 @@ jobs:
               --generate-notes "${args[@]}" --notes-file build/release/notes.md
           fi
           gh release upload "$TAG" "build/release/WhoaType-$VERSION-macOS.dmg" --clobber
+          gh release upload "$TAG" build/release/appcast.xml --clobber
           gh release edit "$TAG" --draft=false
       - name: Open a cask update pull request
         env:
