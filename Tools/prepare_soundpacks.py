@@ -23,7 +23,7 @@ for i,name in enumerate(names,1):
   data[j]=round(data[j]*j/44); data[-1-j]=round(data[-1-j]*j/44)
  with wave.open(str(wav),'wb') as f:
   f.setnchannels(1); f.setsampwidth(2); f.setframerate(44100); f.writeframes(struct.pack('<'+'h'*len(data),*data))
- manifest=dict(schemaVersion=1,id=f'switch-{i:02}',displayName=name,gainDB=-12,pitchCents=dict(min=-35,max=35),samples=dict(standard=dict(down=['sample.wav'],up=['sample.wav'])),fallbackGroup='standard',keyGroups={},keys={},preview=[dict(atMs=t,keyCode=k,phase=phase) for t,k,phase in [(0, 0, 'down'), (90, 0, 'up'), (220, 5, 'down'), (310, 5, 'up'), (440, 37, 'down'), (530, 37, 'up'), (660, 49, 'down'), (760, 49, 'up')]])
+ manifest=dict(schemaVersion=1,id=f'switch-{i:02}',displayName=name,gainDB=0,pitchCents=dict(min=-35,max=35),samples=dict(standard=dict(down=['sample.wav'],up=['sample.wav'])),fallbackGroup='standard',keyGroups={},keys={},preview=[dict(atMs=t,keyCode=k,phase=phase) for t,k,phase in [(0, 0, 'down'), (90, 0, 'up'), (220, 5, 'down'), (310, 5, 'up'), (440, 37, 'down'), (530, 37, 'up'), (660, 49, 'down'), (760, 49, 'up')]])
  (p/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 
 # The pointer group is shared in character across keyboard switch selections.

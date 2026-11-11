@@ -50,7 +50,7 @@ Preview works without the permission and while sound is off.
 - **No sound:** check the menu bar toggle, the volume, and that Input Monitoring is enabled. Settings → General shows the permission state; **Check Again** re-reads it.
 - **Sounds stop in password fields:** macOS Secure Input suppresses key events there. They resume when it ends.
 - **Delay with Bluetooth headphones:** Bluetooth adds substantial, variable audio latency. Use a wired or built-in output for typing.
-- **Reset the permission:** `tccutil reset ListenEvent <bundle id>`, then grant it again.
+- **Reset Input Monitoring after replacing the app:** Quit Whoa Type, run `tccutil reset ListenEvent ugolin-olle.whoa-type`, then launch the Applications copy and grant access again.
 
 ## Uninstall
 
@@ -63,7 +63,7 @@ xcodebuild -project whoa-type.xcodeproj -scheme whoa-type -destination 'platform
 swift test
 ```
 
-`swift test` runs the core Swift Testing suite, not UI or permission checks. Add `WHOA_AUDIO_INTEGRATION=1` to include the real audio-engine test. Everything requires macOS and Xcode; none of it builds on Linux. For a local universal DMG run `scripts/build-dmg.sh 1.2`; output is `build/release/WhoaType-1.2-macOS.dmg`. It builds unsigned unless Developer ID signing and notary credentials are configured; see [distribution](Docs/DISTRIBUTION.md).
+`swift test` runs the core Swift Testing suite, not UI or permission checks. Add `WHOA_AUDIO_INTEGRATION=1` to include the real audio-engine test. Everything requires macOS and Xcode; none of it builds on Linux. For a local universal DMG run `scripts/build-dmg.sh 1.2`; output is `build/release/WhoaType-1.2-macOS.dmg`. Local builds require an Apple Development signing identity. Public releases require Developer ID signing and notarization. See [distribution](Docs/DISTRIBUTION.md).
 
 See [ARCHITECTURE.md](ARCHITECTURE.md) for module ownership and real-time contracts, and [validation](Docs/VALIDATION.md) for measured results and outstanding manual checks.
 

@@ -20,7 +20,7 @@ published tag. For a failed UI run after tag creation, rerun the failed jobs or 
 version again; an existing tag is validated and reused without another version
 commit. Never reuse a version for different app contents.
 
-## Optional signing secrets
+## Required release signing secrets
 
 Set these repository Actions secrets (never commit credential values):
 
@@ -33,9 +33,8 @@ Set these repository Actions secrets (never commit credential values):
 | `APPLE_ID` | Apple account used for notarization |
 | `APPLE_APP_PASSWORD` | App-specific password for that account |
 
-If any secret is absent, Actions builds unsigned and says so in the release notes.
-If all are present, invalid credentials or failed notarization fail the job rather
-than silently downgrading signing. Credentials are imported into a temporary
+Missing secrets, invalid credentials, or failed notarization stop the release.
+Credentials are imported into a temporary
 keychain and removed in an always-run cleanup step. The app and DMG are signed,
 notarized, and stapled before the final checksum is calculated.
 
@@ -49,11 +48,11 @@ WHOA_TEAM_ID=TEAM_ID WHOA_NOTARY_PROFILE=whoa-type-notary \
   scripts/build-dmg.sh 1.2
 ```
 
-Without all three `WHOA_*` signing variables, the shared packager builds unsigned.
-`WHOA_RELEASE_DIR` optionally overrides `build/release`. Local Finder layout
-requires a logged-in GUI session and Finder automation permission; `CI=true`
-skips that interactive layout step (as on hosted runners), preserving the app
-and Applications shortcut. The old
+For local testing, the packager uses the sole Apple Development identity in
+Keychain. If you have several, set `WHOA_LOCAL_SIGNING_IDENTITY` to the certificate
+name or hash. When switching signing identities, quit the old copy and run
+`tccutil reset ListenEvent ugolin-olle.whoa-type` before testing the new copy.
+`WHOA_RELEASE_DIR` optionally overrides `build/release`. The old
 `Tools/build-local.sh` and `Tools/release.sh` delegate to this packager.
 
 ## Local validation

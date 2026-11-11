@@ -5,19 +5,21 @@ struct UpdateSettingsView: View {
 
     var body: some View {
         SettingsGroup("Updates") {
-            LabeledContent("Current version", value: updater.currentVersion)
+            LabeledContent("Current version") {
+                SettingsBadge(Text(updater.currentVersion))
+            }
             LabeledContent("Last checked") {
                 if let date = updater.lastChecked {
-                    Text(date, format: .dateTime.month().day().hour().minute())
+                    SettingsBadge(Text(date, format: .dateTime.month().day().hour().minute()), color: .green)
                 } else {
-                    Text("Never")
+                    SettingsBadge(Text("Never"), color: .orange)
                 }
             }
             Toggle("Automatically check for updates", isOn: $updater.automaticallyChecks)
-                .toggleStyle(.switch)
+                .toggleStyle(SettingsToggleStyle())
                 .disabled(!updater.isConfigured)
             Toggle("Automatically download and install updates", isOn: $updater.automaticallyDownloads)
-                .toggleStyle(.switch)
+                .toggleStyle(SettingsToggleStyle())
                 .disabled(!updater.isConfigured || !updater.automaticallyChecks)
             Picker("Check frequency", selection: $updater.checkInterval) {
                 Text("Daily").tag(TimeInterval(86_400))

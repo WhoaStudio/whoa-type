@@ -1,10 +1,20 @@
-import SwiftUI
+import AVFoundation
 import ImageIO
+import SwiftUI
+import UniformTypeIdentifiers
 
 private enum SettingsPane: String, CaseIterable, Identifiable {
-    case playback = "Sound"
-    case about = "About"
-    case startup = "General"
+    case playback = "sound"
+    case about
+    case startup = "general"
+
+    var title: String {
+        switch self {
+        case .playback: "Sound"
+        case .about: "About"
+        case .startup: "General"
+        }
+    }
 
     var id: Self { self }
 
@@ -27,10 +37,9 @@ private enum SettingsPane: String, CaseIterable, Identifiable {
 
 struct SettingsView: View {
     @Bindable var coordinator: AppCoordinator
-    @State private var editingHotkey = false
-    @State private var selection: SettingsPane? = .startup
-
-    private var pane: SettingsPane { selection ?? .startup }
+    let updateWindowTitle: (String) -> Void
+    @AppStorage("settings.lastPane") private var pane: SettingsPane = .startup
+    @State private var isScrolled = false
 
     var body: some View {
         HStack(spacing: 0) {
@@ -46,53 +55,74 @@ struct SettingsView: View {
             .padding(.top, 52)
             .frame(width: 224)
             Divider()
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(spacing: 8) {
-                    paneIcon(pane, size: 22)
-                    Text(pane.rawValue)
-                        .font(.system(size: 15, weight: .semibold))
-                        .accessibilityAddTraits(.isHeader)
-                }
-                .padding(.horizontal, 16)
-                .padding(.top, 16)
-                .padding(.bottom, 0)
-
+            GeometryReader { geometry in
                 ScrollView {
                     VStack(alignment: .leading, spacing: 18) {
-                    switch pane {
-                    case .playback:
-                        playbackSettingsGroups
-                        soundEffectsSettingsGroup
-                        switchSettingsGroups
-                    case .about: aboutSettingsGroups
-                    case .startup: startupSettingsGroups
-                    }
+                        switch pane {
+                        case .playback:
+                            playbackSettingsGroups
+                            audioOutputSettingsGroup
+                            soundEffectsSettingsGroup
+                        case .about: aboutSettingsGroups
+                        case .startup: generalSettingsGroups
+                        }
                     }
                     .padding(16)
+                    // Leave a little scroll room for panes that fit in the window.
+                    .frame(minHeight: geometry.size.height - paneHeaderHeight + 24,
+                           alignment: .topLeading)
+                    .padding(.top, paneHeaderHeight)
+                }
+                .onScrollGeometryChange(for: Bool.self) { geometry in
+                    geometry.contentOffset.y + geometry.contentInsets.top > 0.5
+                } action: { _, scrolled in
+                    isScrolled = scrolled
                 }
                 .font(.system(size: 13))
-                .tint(.mint)
                 .scrollContentBackground(.hidden)
                 .controlSize(.regular)
                 .pickerStyle(.menu)
+                .overlay(alignment: .top) {
+                    paneHeader
+                }
             }
-            .background(Color(nsColor: .settingsBackground))
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
         .background(Color(nsColor: .settingsBackground))
         .frame(width: 640, height: 620)
         .ignoresSafeArea(.container, edges: .top)
 
         .onAppear { coordinator.refresh() }
+        .onChange(of: pane, initial: true) { _, pane in
+            updateWindowTitle(pane.title)
+        }
+    }
+
+    private let paneHeaderHeight: CGFloat = 38
+
+    private var paneHeader: some View {
+        HStack(spacing: 8) {
+            paneIcon(pane, size: 22)
+            Text(pane.title)
+                .font(.system(size: 15, weight: .semibold))
+                .accessibilityAddTraits(.isHeader)
+        }
+        .padding(.horizontal, 16)
+        .frame(maxWidth: .infinity, minHeight: paneHeaderHeight, maxHeight: paneHeaderHeight,
+               alignment: .bottomLeading)
+        .background {
+            if isScrolled {
+                Rectangle().fill(.thinMaterial)
+            }
+        }
     }
 
     private func sidebarRow(_ pane: SettingsPane) -> some View {
         Button {
-            selection = pane
+            self.pane = pane
         } label: {
             HStack(spacing: 8) {
                 paneIcon(pane, size: 22)
-                Text(pane.rawValue)
+                Text(pane.title)
                     .font(.system(size: 13))
                 Spacer()
             }
@@ -135,63 +165,32 @@ struct SettingsView: View {
             .accessibilityHidden(true)
     }
 
-    @ViewBuilder private var playbackSettingsGroups: some View {
-        SettingsGroup {
-            SoundSettingsView(settings: coordinator.settings)
-        } header: {
-            EmptyView()
-        } footer: {
-            Text("Choose the physical layout of your keyboard. Switch previews play even when key sounds are off.")
+    private var playbackSettingsGroups: some View {
+        SettingsGroup("Playback") {
+            SoundSettingsView(coordinator: coordinator)
         }
-        if let error = coordinator.errorMessage {
-            SettingsGroup {
-                Text(error).foregroundStyle(.secondary)
-                Button("Retry audio") { coordinator.refresh() }
-            }
-        }
-
     }
 
-    @ViewBuilder private var switchSettingsGroups: some View {
-        SettingsGroup("Recordings") {
-            if coordinator.packs.isEmpty {
-                Text("Switch recordings are unavailable. Retry loading the bundled library.")
+    private var audioOutputSettingsGroup: some View {
+        let route = coordinator.audioReady ? coordinator.audioRoute : nil
+        return SettingsGroup("Audio Output") {
+            LabeledContent("Output", value: route?.status ?? "System output")
+            if route?.isBluetooth == true {
+                Text("Bluetooth can add a noticeable delay.")
                     .foregroundStyle(.secondary)
-                Button("Retry loading") { coordinator.refresh() }
             }
-            ForEach(coordinator.packs) { pack in
-                Button {
-                    coordinator.selectAndPreview(pack.id)
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: coordinator.settings.selectedPackID == pack.id
-                              ? "checkmark.circle.fill" : "circle")
-                            .frame(width: 18)
-                        Text(pack.name)
-                        Spacer(minLength: 0)
-                        if coordinator.previewing == pack.name {
-                            Image(systemName: "waveform")
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, minHeight: 22, alignment: .leading)
-                    .contentShape(Rectangle())
+            if let details = route?.details {
+                DisclosureGroup("Output details") {
+                    Text(details).foregroundStyle(.secondary)
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel(pack.name)
-                .accessibilityValue(coordinator.settings.selectedPackID == pack.id ? "Selected" : "Not selected")
-                .accessibilityHint("Selects and previews this recording")
-                .accessibilityAddTraits(coordinator.settings.selectedPackID == pack.id ? .isSelected : [])
-
             }
+            Link("Open Sound Settings…", destination: URL(string: "x-apple.systempreferences:com.apple.Sound-Settings.extension")!)
         }
     }
 
-    @ViewBuilder private var inputAccessSettingsGroups: some View {
-        SettingsGroup("Input Access") {
+    private var inputAccessSettingsGroup: some View {
+        SettingsGroup("Privacy & Input Monitoring") {
             PermissionOnboardingView(permission: coordinator.permission)
-        }
-        SettingsGroup("Password fields") {
             Text("macOS Secure Input can pause keyboard sounds while you enter a password. Sounds resume when secure input ends.")
                 .foregroundStyle(.secondary)
         }
@@ -218,106 +217,104 @@ struct SettingsView: View {
         }
         SettingsGroup {
             LabeledContent("Whoa Type", value: "Keyboard sounds for macOS")
-            LabeledContent("Version", value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0")
+            LabeledContent("Version") {
+                SettingsBadge(Text(coordinator.updater.currentVersion))
+            }
         }
     }
 
-    @ViewBuilder private var startupSettingsGroups: some View {
-        UpdateSettingsView(updater: coordinator.updater)
-        SettingsGroup {
-            Toggle("Start Whoa Type at login", isOn: Binding(
-                get: { coordinator.loginItem.enabled },
+    @ViewBuilder private var generalSettingsGroups: some View {
+        SettingsGroup("Startup") {
+            Toggle("Launch at login", isOn: Binding(
+                get: { coordinator.loginItem.registrationRequested },
                 set: { coordinator.loginItem.setEnabled($0) }
             ))
-            .toggleStyle(.switch)
-        } header: {
-            EmptyView()
-        } footer: {
-            Text("Whoa Type runs in the menu bar. Closing this window keeps keyboard sounds available.")
-        }
-        inputAccessSettingsGroups
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text("Hotkey").foregroundStyle(.secondary)
-                Spacer()
-                Button("Edit…") { editingHotkey = true }
-                    .accessibilityLabel("Configure sound hotkey")
-            }
-            .padding(.horizontal, 8)
-            Button { editingHotkey = true } label: {
-                SettingsGroup {
-                    HStack(spacing: 6) {
-                        shortcutKey("⇧").opacity(coordinator.hotkey.modifierChoice == 2 ? 1 : 0.35)
-                        shortcutKey("⌃", caption: "ctrl").opacity(coordinator.hotkey.modifierChoice == 2 ? 0.35 : 1)
-                        shortcutKey("⌥", caption: "opt").opacity(coordinator.hotkey.modifierChoice == 2 ? 0.35 : 1)
-                        shortcutKey("⌘", caption: "cmd").opacity(coordinator.hotkey.modifierChoice == 0 ? 0.35 : 1)
-                        shortcutKey(SoundHotkey.keys[SoundHotkey.keys.indices.contains(coordinator.hotkey.keyChoice) ? coordinator.hotkey.keyChoice : 0].0)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .contentShape(Rectangle())
+            .toggleStyle(SettingsToggleStyle())
+            if coordinator.loginItem.requiresApproval || coordinator.loginItem.errorMessage != nil {
+                Text(coordinator.loginItem.message)
+                    .foregroundStyle(.secondary)
+                if coordinator.loginItem.requiresApproval {
+                    Button("Open Login Items…") { coordinator.loginItem.openSettings() }
                 }
             }
-            .buttonStyle(.plain)
-            .help("Edit the sound toggle shortcut")
-            .accessibilityLabel("Edit sound toggle shortcut")
         }
-        .popover(isPresented: $editingHotkey) {
-            Form {
-                Picker("Modifiers", selection: $coordinator.hotkey.modifierChoice) {
-                    Text("⌃ ⌥").tag(0)
-                    Text("⌃ ⌥ ⌘").tag(1)
-                    Text("⇧ ⌘").tag(2)
-                }
-                .pickerStyle(.menu)
-                Picker("Key", selection: $coordinator.hotkey.keyChoice) {
-                    ForEach(Array(SoundHotkey.keys.enumerated()), id: \.offset) { index, key in
-                        Text(key.0).tag(index)
-                    }
-                }
-                .pickerStyle(.menu)
-                Toggle("Enable global shortcut", isOn: $coordinator.hotkey.enabled)
-                    .toggleStyle(.switch)
-                if let message = coordinator.hotkey.message {
-                    Text(message).foregroundStyle(.secondary)
-                }
-            }
-            .padding()
-            .frame(width: 320)
-        }
-
+        menuBarSettingsGroup
+        keyboardShortcutSettingsGroup
+        inputAccessSettingsGroup
+        UpdateSettingsView(updater: coordinator.updater)
     }
 
-    private func shortcutKey(_ label: String, caption: String? = nil) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
-            if label == "⇧" { Spacer(minLength: 0) }
-            Text(label)
-                .font(.system(size: 18, weight: caption == nil && label != "⇧" ? .semibold : .medium))
-            if let caption {
-                Text(caption).font(.system(size: 13))
+    private var menuBarSettingsGroup: some View {
+        SettingsGroup("Menu Bar") {
+            Picker("Text next to icon", selection: $coordinator.settings.menuBarDisplay) {
+                ForEach(MenuBarDisplay.allCases, id: \.self) { option in
+                    Text(option.rawValue).tag(option)
+                }
+            }
+            Toggle("Keep icon fully visible", isOn: $coordinator.settings.disableMenuBarIconOpacity)
+            .toggleStyle(SettingsToggleStyle())
+            Toggle("Preview switches on hover", isOn: Binding(
+                get: { !coordinator.settings.disableSwitchPreviewOnHover },
+                set: { coordinator.settings.disableSwitchPreviewOnHover = !$0 }
+            ))
+            .toggleStyle(SettingsToggleStyle())
+            Picker(selection: $coordinator.settings.menuBarClickAction) {
+                ForEach(MenuBarClickAction.allCases, id: \.self) { action in
+                    Text(action.rawValue).tag(action)
+                }
+            } label: {
+                HStack(spacing: 5) {
+                    Text("When clicking menu bar icon")
+                    Image(systemName: "info.circle.fill")
+                        .foregroundStyle(.secondary)
+                        .help("Choose what a primary click does. Right-click or Control-click always opens the menu.")
+                        .accessibilityHidden(true)
+                }
+            }
+            .accessibilityHint("Right-click or Control-click always opens the menu.")
+            if coordinator.settings.menuBarClickAction == .toggleKeySounds {
+                Text("Right-click or Control-click the icon to open the menu.")
+                    .foregroundStyle(.secondary)
             }
         }
-        .padding(9)
-        .frame(minWidth: 0, maxWidth: .infinity, minHeight: 56, maxHeight: 56,
-               alignment: caption != nil || label == "⇧" ? .leading : .center)
-        .background(Color(nsColor: .controlBackgroundColor), in: RoundedRectangle(cornerRadius: 10))
-        .overlay {
-            RoundedRectangle(cornerRadius: 10)
-                .strokeBorder(.primary.opacity(0.10), lineWidth: 1)
+    }
+
+    private var keyboardShortcutSettingsGroup: some View {
+        SettingsGroup {
+            HotkeyKeycaps(
+                modifierChoice: $coordinator.hotkey.modifierChoice,
+                keyChoice: $coordinator.hotkey.keyChoice,
+                enabled: $coordinator.hotkey.enabled
+            )
+        } header: {
+            Text("Hotkey")
+        } footer: {
+            if !coordinator.hotkey.enabled {
+                Text("Shortcut is off. Select a key to enable it.")
+            } else if let message = coordinator.hotkey.message {
+                Text(message)
+            }
         }
-        .shadow(color: .black.opacity(0.08), radius: 1.5, y: 1)
     }
 
     @ViewBuilder private var soundEffectsSettingsGroup: some View {
         SettingsGroup("Sound Effects") {
+            if coordinator.packs.isEmpty {
+                Text(coordinator.loading
+                     ? "Loading switch recordings…" : "Switch recordings are unavailable.")
+                    .foregroundStyle(.secondary)
+                if !coordinator.loading {
+                    Button("Retry Loading") { coordinator.refresh() }
+                }
+            } else {
+                SwitchSoundPicker(coordinator: coordinator)
+            }
             VStack(spacing: 10) {
                 HStack {
                     Text("Effects volume")
                     Spacer()
-                    Text(coordinator.settings.effectsVolume, format: .percent.precision(.fractionLength(0)))
-                        .monospacedDigit()
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(.quaternary, in: Capsule())
+                    SettingsBadge(Text(coordinator.settings.effectsVolume,
+                                       format: .percent.precision(.fractionLength(0))))
                 }
                 Slider(value: $coordinator.settings.effectsVolume, in: 0...1) {
                     Text("Effects volume")
@@ -327,25 +324,25 @@ struct SettingsView: View {
             HStack {
                 Text("Play mouse click sounds")
                 Button { coordinator.previewMouse() } label: {
-                    Image(systemName: "play.circle.fill").foregroundStyle(.secondary)
+                    Image(systemName: "play.circle.fill").foregroundStyle(.teal)
                 }
                 .buttonStyle(.plain)
                 .disabled(coordinator.packs.isEmpty)
                 .accessibilityLabel("Preview mouse click sound")
                 Spacer()
                 Toggle("Play mouse click sounds", isOn: $coordinator.settings.mouseSoundsEnabled)
-                    .labelsHidden().toggleStyle(.switch)
+                    .labelsHidden().toggleStyle(SettingsToggleStyle())
             }
             HStack {
                 Text("Play ding sound on return key")
                 Button { coordinator.previewDing() } label: {
-                    Image(systemName: "play.circle.fill").foregroundStyle(.secondary)
+                    Image(systemName: "play.circle.fill").foregroundStyle(.orange)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel("Preview return key ding")
                 Spacer()
                 Toggle("Play ding sound on return key", isOn: $coordinator.settings.returnDingEnabled)
-                    .labelsHidden().toggleStyle(.switch)
+                    .labelsHidden().toggleStyle(SettingsToggleStyle())
             }
         }
     }
@@ -368,7 +365,9 @@ final class SettingsWindowController: NSWindowController, NSWindowDelegate {
         window.backgroundColor = .settingsBackground
         window.isReleasedWhenClosed = false
         window.isMovableByWindowBackground = true
-        let content = NSHostingView(rootView: SettingsView(coordinator: coordinator))
+        let content = NSHostingView(rootView: SettingsView(coordinator: coordinator) { [weak window] title in
+            window?.title = "\(title) — Whoa Type Settings"
+        })
         content.safeAreaRegions = []
         window.contentView = content
         super.init(window: window)
@@ -453,19 +452,44 @@ struct SettingsGroup<Content: View>: View {
     }
 }
 
-nonisolated private func wallpaperThumbnail(_ url: URL) -> CGImage? {
-    guard let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
-    let options: [CFString: Any] = [
-        kCGImageSourceCreateThumbnailFromImageAlways: true,
-        kCGImageSourceCreateThumbnailWithTransform: true,
-        kCGImageSourceThumbnailMaxPixelSize: 1200
-    ]
-    return CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary)
+@concurrent
+private func wallpaperThumbnail(_ url: URL) async -> CGImage? {
+    guard url.isFileURL else { return nil }
+    var imageURL = url
+    if url.pathExtension == "madesktop",
+       let data = try? Data(contentsOf: url),
+       let descriptor = try? PropertyListSerialization.propertyList(from: data, format: nil)
+           as? [String: Any],
+       let thumbnailPath = descriptor["thumbnailPath"] as? String {
+        imageURL = URL(fileURLWithPath: thumbnailPath)
+    }
+
+    if let source = CGImageSourceCreateWithURL(imageURL as CFURL, nil) {
+        let options: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: 1200,
+        ]
+        if let thumbnail = CGImageSourceCreateThumbnailAtIndex(
+            source, CGImageSourceGetPrimaryImageIndex(source), options as CFDictionary
+        ) {
+            return thumbnail
+        }
+    }
+
+    guard UTType(filenameExtension: url.pathExtension)?.conforms(to: .movie) == true else {
+        return nil
+    }
+    let generator = AVAssetImageGenerator(asset: AVURLAsset(url: url))
+    generator.maximumSize = CGSize(width: 1200, height: 1200)
+    generator.appliesPreferredTrackTransform = true
+    return try? await generator.image(at: .zero).image
 }
 
 struct AboutKeyBanner: View {
     let preview: () -> Void
     @State private var wallpaper: NSImage?
+    @State private var wallpaperRevision = 0
     private let iconSize: CGFloat = 56
 
     private var trashIcon: NSImage {
@@ -473,17 +497,15 @@ struct AboutKeyBanner: View {
             ?? NSWorkspace.shared.icon(forFile: NSHomeDirectory() + "/.Trash")
     }
 
-    private func refreshWallpaper() {
-        guard let screen = NSScreen.main,
-              let url = NSWorkspace.shared.desktopImageURL(for: screen) else {
+    private func refreshWallpaper() async {
+        let screen = NSApp.keyWindow?.screen ?? NSScreen.main
+        guard let screen, let url = NSWorkspace.shared.desktopImageURL(for: screen) else {
             wallpaper = nil
             return
         }
-        // Decode a downsampled thumbnail off the main thread; full wallpapers can be tens of MB.
-        Task {
-            let thumbnail = await Task.detached(priority: .utility) { wallpaperThumbnail(url) }.value
-            wallpaper = thumbnail.map { NSImage(cgImage: $0, size: .zero) }
-        }
+        let thumbnail = await wallpaperThumbnail(url)
+        guard !Task.isCancelled else { return }
+        wallpaper = thumbnail.map { NSImage(cgImage: $0, size: .zero) }
     }
 
     var body: some View {
@@ -532,12 +554,17 @@ struct AboutKeyBanner: View {
             }
         }
         .frame(height: 120)
-        .onAppear { refreshWallpaper() }
+        .task(id: wallpaperRevision) { await refreshWallpaper() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
-            refreshWallpaper()
+            wallpaperRevision += 1
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSWindow.didChangeScreenNotification)) { event in
+            if event.object as? NSWindow === NSApp.keyWindow {
+                wallpaperRevision += 1
+            }
         }
         .onReceive(NSWorkspace.shared.notificationCenter.publisher(for: NSWorkspace.activeSpaceDidChangeNotification)) { _ in
-            refreshWallpaper()
+            wallpaperRevision += 1
         }
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .overlay {

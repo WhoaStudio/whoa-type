@@ -3,6 +3,12 @@ import AVFoundation
 import CoreAudio
 import Foundation
 
+nonisolated struct AudioRoute: Sendable {
+    let status: String
+    let isBluetooth: Bool
+    let details: String?
+}
+
 // Only this queue owns graph lifecycle and retained banks. No mutable graph or
 // owning bank references cross into the source callback.
 nonisolated final class AudioService: @unchecked Sendable {
@@ -111,7 +117,7 @@ nonisolated final class AudioService: @unchecked Sendable {
             queue.async { continuation.resume(returning: self.engine?.isRunning == true) }
         }
     }
-    func routeDescription() async -> String {
+    func outputRoute() async -> AudioRoute {
         await withCheckedContinuation { continuation in
             queue.async {
                 var address = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDefaultOutputDevice,
@@ -119,7 +125,9 @@ nonisolated final class AudioService: @unchecked Sendable {
                 var device = AudioDeviceID(0)
                 var size = UInt32(MemoryLayout<AudioDeviceID>.size)
                 guard AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject), &address, 0, nil, &size, &device) == noErr else {
-                    continuation.resume(returning: "System audio output unavailable"); return
+                    continuation.resume(returning: AudioRoute(
+                        status: "System output unavailable", isBluetooth: false, details: nil))
+                    return
                 }
                 var frames: UInt32 = 0
                 address.mSelector = kAudioDevicePropertyBufferFrameSize
@@ -129,8 +137,10 @@ nonisolated final class AudioService: @unchecked Sendable {
                 _ = AudioObjectGetPropertyData(device, &address, 0, nil, &size, &transport)
                 let rate = self.engine?.outputNode.outputFormat(forBus: 0).sampleRate ?? 0
                 let bluetooth = transport == kAudioDeviceTransportTypeBluetooth || transport == kAudioDeviceTransportTypeBluetoothLE
-                let note = bluetooth ? " Bluetooth adds substantial, variable audio delay." : " Hardware and driver latency vary."
-                continuation.resume(returning: "System output: \(Int(rate)) Hz, \(frames) frames." + note)
+                let details = rate > 0 && frames > 0 ? "\(Int(rate)) Hz, \(frames) frames per buffer" : nil
+                continuation.resume(returning: AudioRoute(
+                    status: bluetooth ? "Bluetooth output" : "System output",
+                    isBluetooth: bluetooth, details: details))
             }
         }
     }

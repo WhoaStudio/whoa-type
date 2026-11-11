@@ -2,19 +2,17 @@ import SwiftUI
 
 @main
 struct whoa_typeApp: App {
-    @State private var coordinator = AppCoordinator()
+    @NSApplicationDelegateAdaptor(MenuBarController.self) private var menuBar
+
     var body: some Scene {
-        MenuBarExtra("Whoa Type", image: "MenuBarLogo") {
-            MenuBarView(coordinator: coordinator)
-        }
-        .menuBarExtraStyle(.window)
+        Settings { EmptyView() }
         .commands {
             CommandGroup(replacing: .appSettings) {
-                Button("Whoa Type Settings…") { coordinator.showSettings() }
+                Button("Whoa Type Settings…") { menuBar.coordinator.showSettings() }
                     .keyboardShortcut(",")
             }
             CommandGroup(after: .appInfo) {
-                CheckForUpdatesButton(updater: coordinator.updater)
+                CheckForUpdatesButton(updater: menuBar.coordinator.updater)
             }
         }
     }

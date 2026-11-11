@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuBarView: View {
     @Bindable var coordinator: AppCoordinator
+    let close: () -> Void
     @State private var hoverPreview: Task<Void, Never>?
 
     private let appName = "Whoa Type"
@@ -34,8 +35,8 @@ struct MenuBarView: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(spacing: 2) {
-                            ForEach(coordinator.packs) { pack in
-                                packRow(pack).id(pack.id)
+                            ForEach(Array(coordinator.packs.enumerated()), id: \.element.id) { index, pack in
+                                packRow(pack, index: index).id(pack.id)
                             }
                         }
                     }
@@ -54,7 +55,7 @@ struct MenuBarView: View {
                 .font(.system(size: 11, weight: .medium))
                 .foregroundStyle(.tertiary)
             Button("\(appName) Settings…") {
-                NSApplication.shared.activate()
+                close()
                 coordinator.showSettings()
             }
             .keyboardShortcut(",")
@@ -68,6 +69,10 @@ struct MenuBarView: View {
         }
         .padding(16)
         .frame(width: 300)
+        .onChange(of: coordinator.settings.disableSwitchPreviewOnHover) { _, disabled in
+            if disabled { hoverPreview?.cancel() }
+        }
+        .onDisappear { hoverPreview?.cancel() }
     }
 
     private func sectionLabel(_ title: String) -> some View {
@@ -76,24 +81,11 @@ struct MenuBarView: View {
             .foregroundStyle(.secondary)
     }
 
-    private func packRow(_ pack: SoundPack) -> some View {
+    private func packRow(_ pack: SoundPack, index: Int) -> some View {
         let selected = coordinator.settings.selectedPackID == pack.id
         return Button { coordinator.select(pack.id) } label: {
             HStack(spacing: 10) {
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(packColor(pack.id).gradient)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 6)
-                            .strokeBorder(.black.opacity(0.15), lineWidth: 1)
-                    }
-                    .overlay {
-                        Image(systemName: "plus")
-                            .font(.system(size: 13, weight: .semibold))
-                            .foregroundStyle(.white)
-                            .shadow(color: .black.opacity(0.3), radius: 1, y: 1)
-                    }
-                    .frame(width: 23, height: 23)
-                    .accessibilityHidden(true)
+                SoundPackBadge(index: index, size: 23)
                 Text(pack.name)
                 Spacer()
                 Image(systemName: "checkmark")
@@ -106,21 +98,16 @@ struct MenuBarView: View {
         .onHover { hovering in
             // Debounce so sweeping the pointer down the list does not queue a load per row.
             hoverPreview?.cancel()
-            guard hovering else { return }
+            guard hovering, !coordinator.settings.disableSwitchPreviewOnHover else { return }
             hoverPreview = Task {
                 try? await Task.sleep(for: .milliseconds(250))
-                if !Task.isCancelled { coordinator.preview(pack.id) }
+                if !Task.isCancelled && !coordinator.settings.disableSwitchPreviewOnHover {
+                    coordinator.preview(pack.id)
+                }
             }
         }
         .accessibilityValue(selected ? "Selected" : "Not selected")
         .accessibilityAddTraits(selected ? [.isSelected] : [])
-    }
-
-    /// Presentation-only color derived from the pack ID, stable across launches.
-    private func packColor(_ id: String) -> Color {
-        var hash: UInt32 = 2166136261
-        for byte in id.utf8 { hash = (hash ^ UInt32(byte)) &* 16777619 }
-        return Color(hue: Double(hash % 360) / 360, saturation: 0.45, brightness: 0.7)
     }
 }
 

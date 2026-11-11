@@ -1,11 +1,26 @@
 import Foundation
 import Observation
 
+nonisolated enum MenuBarDisplay: String, CaseIterable {
+    case none = "None"
+    case switchName = "Switch name"
+    case volume = "Volume"
+}
+
+nonisolated enum MenuBarClickAction: String, CaseIterable {
+    case showMenu = "Show menu"
+    case toggleKeySounds = "Toggle key sounds"
+}
+
 @MainActor @Observable
 final class SettingsStore {
     var onboardingCompleted: Bool { didSet { defaults.set(onboardingCompleted, forKey: "onboardingCompleted") } }
     private let defaults: UserDefaults
     var soundEnabled: Bool { didSet { defaults.set(soundEnabled, forKey: "soundEnabled") } }
+    var menuBarDisplay: MenuBarDisplay { didSet { defaults.set(menuBarDisplay.rawValue, forKey: "menuBarDisplay") } }
+    var disableMenuBarIconOpacity: Bool { didSet { defaults.set(disableMenuBarIconOpacity, forKey: "disableMenuBarIconOpacity") } }
+    var disableSwitchPreviewOnHover: Bool { didSet { defaults.set(disableSwitchPreviewOnHover, forKey: "disableSwitchPreviewOnHover") } }
+    var menuBarClickAction: MenuBarClickAction { didSet { defaults.set(menuBarClickAction.rawValue, forKey: "menuBarClickAction") } }
     var mouseSoundsEnabled: Bool { didSet { defaults.set(mouseSoundsEnabled, forKey: "mouseSoundsEnabled") } }
     var returnDingEnabled: Bool { didSet { defaults.set(returnDingEnabled, forKey: "returnDingEnabled") } }
     var effectsVolume: Double {
@@ -27,6 +42,10 @@ final class SettingsStore {
 
     init(defaults: UserDefaults = .standard, validPackIDs: [String] = []) {
         self.defaults = defaults
+        menuBarDisplay = MenuBarDisplay(rawValue: defaults.string(forKey: "menuBarDisplay") ?? "") ?? .none
+        disableMenuBarIconOpacity = defaults.bool(forKey: "disableMenuBarIconOpacity")
+        disableSwitchPreviewOnHover = defaults.bool(forKey: "disableSwitchPreviewOnHover")
+        menuBarClickAction = MenuBarClickAction(rawValue: defaults.string(forKey: "menuBarClickAction") ?? "") ?? .showMenu
         onboardingCompleted = defaults.object(forKey: "onboardingCompleted") as? Bool ?? (defaults.object(forKey: "settingsVersion") != nil)
         mouseSoundsEnabled = defaults.object(forKey: "mouseSoundsEnabled") as? Bool ?? true
         returnDingEnabled = defaults.bool(forKey: "returnDingEnabled")
