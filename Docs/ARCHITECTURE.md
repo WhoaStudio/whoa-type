@@ -20,6 +20,10 @@ Source folders below are under `whoa-type`:
 
 `Package.swift` builds selected core sources from the same tree for `Tests/WhoaTypeCoreTests`; it excludes the app shell, coordinator, permissions, login-item service and resources.
 
+## Development tools
+
+Run `python3 Tools/prepare_soundpacks.py /path/to/originals` to convert external source recordings with macOS `afconvert`. Loose source audio is excluded from the bundle. `Tools/benchmark.sh` runs synthetic audio workloads. `Tools/CaptureProbe/main.swift` is a standalone feasibility probe outside the app build and CI.
+
 ## Threading and real-time contract
 
 The main actor owns UI and lifecycle decisions. Capture has a dedicated run loop; loading and engine control use separate queues. Capture is the sole trigger producer, including synthetic Preview events. The renderer consumes bounded commands and mixes preloaded samples through a fixed voice pool. Keep allocation, locks, file I/O, logging, UI updates and graph mutations out of capture/render callbacks.
@@ -42,4 +46,4 @@ Live capture requires enabled sound, Input Monitoring authorization and prepared
 
 ## Distribution and validation
 
-See [distribution](Docs/DISTRIBUTION.md) for local universal packaging and Developer ID notarization, [validation](Docs/VALIDATION.md) for historical measurements and outstanding interactive checks, and [privacy](Docs/PRIVACY.md) for the input-data contract. `ci.yml` builds and tests every pull request; the Release workflow tests, builds and publishes the DMG and cask.
+See [distribution](DISTRIBUTION.md) for local universal packaging and Developer ID notarization, [validation](VALIDATION.md) for historical measurements and outstanding interactive checks, and [privacy](PRIVACY.md) for the input-data contract. `ci.yml` builds and tests every pull request; the Release workflow tests, builds and publishes the DMG and cask.

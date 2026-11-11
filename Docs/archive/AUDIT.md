@@ -5,6 +5,8 @@
 - **Scope:** security, architecture/code quality, performance, docs. No source files were modified; this report is the only change.
 - **Codebase size:** ~2,100 lines of app Swift, ~700 lines of tests, 16 bundled sound packs (6.3 MB).
 
+This report is a historical snapshot. File and line citations describe the audited revision above.
+
 Severity scale: **Critical**: legal or release-blocking. **High**: the core feature breaks for users, or the issue undermines the project's stated guarantees. **Medium**: a real defect or risk with limited blast radius. **Low**: hygiene or polish.
 
 ---
@@ -80,7 +82,7 @@ Findings below are as originally reported against `2efdf7a`.
 
 ### C1. Bundled recordings include a "Personal use only" pack and other packs whose licences are unconfirmed, and they ship in public releases
 - **Where:** `whoa-type/Resources/SoundPacks/keychron-q3-bluex/LICENSE.txt:1` ("Personal use only."), `whoa-type/Resources/SoundPacks/keychron-q3-bluex/manifest.json:4` (`"Keychron Q3 Blue"`), `LICENSE:1-2` ("their licensing is pending"), `README.md:22-24`, `Casks/whoa-type.rb:5`. 15 other packs credit "kbs.im" or "monkeytype" in their `displayName` but have no `license` field.
-- **Why it matters:** The release workflow (`.github/workflows/release-build.yml:69-97`) publishes these files in a public DMG, and the cask makes them installable through Homebrew. Redistributing a personal-use-only recording breaks its licence. The monkeytype project is copyleft-licensed, so its assets may carry obligations that conflict with the MIT grant. The display name also uses a hardware trademark, which contradicts `CLAUDE.md:17` and `ARCHITECTURE.md:31` ("Names do not identify hardware"). The repo's own docs (`README.md:22-24`, `CONTRIBUTING.md:33-34`) treat redistribution rights as a release requirement, and v1.0.0 shipped without meeting it.
+- **Why it matters:** The release workflow (`.github/workflows/release-build.yml:69-97`) publishes these files in a public DMG, and the cask makes them installable through Homebrew. Redistributing a personal-use-only recording breaks its licence. The monkeytype project is copyleft-licensed, so its assets may carry obligations that conflict with the MIT grant. The display name also uses a hardware trademark, which contradicts `CLAUDE.md:17` and `architecture document, line 31` ("Names do not identify hardware"). The repo's own docs (`README.md:22-24`, `CONTRIBUTING.md:33-34`) treat redistribution rights as a release requirement, and v1.0.0 shipped without meeting it.
 - **Fix:** Pull `keychron-q3-bluex` from the bundle now and cut a v1.0.1. For each remaining pack, record provenance and licence in `manifest.json` (`license` is already supported and validated in `SoundPackValidator.swift:23`). Make the validator, or a release-time check in `scripts/build-dmg.sh`, reject packs without a `license` file. Rename any pack that uses brand names. Decide whether v1.0.0 assets need to be withdrawn.
 
 ---
@@ -113,7 +115,7 @@ Findings below are as originally reported against `2efdf7a`.
 
 ### M1. The capture hot path allocates and hops actors on every Return key, against the project's own rule
 - **Where:** `whoa-type/Input/KeyCaptureService.swift:128` calls `returnDing?()` on the event-tap thread. The closure, built at `whoa-type/App/AppCoordinator.swift:142-146`, creates a `Task { @MainActor … }`, which allocates. The ding then runs `NSSound(named:)?.copy()` (`:151-156`).
-- **Why it matters:** `CLAUDE.md:13` and `ARCHITECTURE.md:25` say "no allocations … on capture/render paths". The ding also bypasses the low-latency renderer, so it has different latency and volume behaviour from every other sound.
+- **Why it matters:** `CLAUDE.md:13` and `architecture document, line 25` say "no allocations … on capture/render paths". The ding also bypasses the low-latency renderer, so it has different latency and volume behaviour from every other sound.
 - **Fix:** Treat the ding as a sample. Add a reserved slot to `PreparedSoundBank` (as pointer slots already work) and push an `AudioTrigger` from the tap. If `NSSound` has to stay, post a pre-allocated signal (an `Atomic` flag polled by a main-thread `DispatchSource`) instead of creating a `Task` per keystroke.
 
 ### M2. Launch validates every pack, then re-validates and decodes the selected pack
@@ -200,11 +202,11 @@ Findings below are as originally reported against `2efdf7a`.
 | ID | Severity | Finding | Where | Fix |
 |---|---|---|---|---|
 | D3 | Medium | Install, tap and security links point to `WhoaStudio/Whoa-Typer`, but the repo and cask are `WhoaStudio/whoa-type`. They only work while GitHub's rename redirect lasts. | `README.md:8,14`, `Docs/DISTRIBUTION.md:3`, `SECURITY.md:11`, `.github/ISSUE_TEMPLATE/config.yml:4`, `Tools/generate-cask.py:11`, `Tools/protect-branches.sh:7` | Replace them all with `WhoaStudio/whoa-type` |
-| D4 | Medium | The descriptions of the pack set are wrong. ARCHITECTURE and SCAFFOLD describe "38 packs `switch-01`…`switch-38` with `sample.wav`", but there are 16 imported packs with per-key files. README says the 16 are bundled "alongside the original switches" (there are none), says "Cherry MX Blue was skipped" (`mxblue` is present), and references a `neptune-import.log` that doesn't exist. VALIDATION cites "19 tests … all 38 pack conversions". | `ARCHITECTURE.md:31`, `SCAFFOLD.md:12`, `README.md:49-53`, `Docs/VALIDATION.md:12` | Rewrite them to match `Resources/SoundPacks` |
+| D4 | Medium | The descriptions of the pack set are wrong. ARCHITECTURE and SCAFFOLD describe "38 packs `switch-01`…`switch-38` with `sample.wav`", but there are 16 imported packs with per-key files. README says the 16 are bundled "alongside the original switches" (there are none), says "Cherry MX Blue was skipped" (`mxblue` is present), and references a `neptune-import.log` that doesn't exist. VALIDATION cites "19 tests … all 38 pack conversions". | `architecture document, line 31`, `source layout note, line 12`, `README.md:49-53`, `Docs/VALIDATION.md:12` | Rewrite them to match `Resources/SoundPacks` |
 | D5 | Medium | PRIVACY lists only 5 stored preferences. The app also stores `onboardingCompleted`, `mouseSoundsEnabled`, `returnDingEnabled`, `effectsVolume` and `hotkey.*`, and it registers a Carbon global hotkey. | `Docs/PRIVACY.md:5`; `Settings/SettingsStore.swift:6-26`; `App/AppCoordinator.swift:296-298` | List every key and mention the hotkey |
 | D6 | Low | README's description of the Settings panes ("Playback, Switch Library, Input Access, Startup") is out of date. The real panes are General, Sound and About. | `README.md:39` vs `AppShell/SettingsView.swift:3-6` | Update it |
 | D7 | Low | README mentions "two capture probes". There's one (`Tools/CaptureProbe`) and nothing builds it. | `README.md:35` | Fix the count and add build instructions, or delete the probe |
-| D8 | Low | ARCHITECTURE says "CI only creates a manually requested local validation artifact". In fact CI publishes releases and pushes the cask. CONTRIBUTING mentions CI that doesn't exist. | `ARCHITECTURE.md:45`, `CONTRIBUTING.md:27` | Update after H3 |
+| D8 | Low | ARCHITECTURE says "CI only creates a manually requested local validation artifact". In fact CI publishes releases and pushes the cask. CONTRIBUTING mentions CI that doesn't exist. | `architecture document, line 45`, `CONTRIBUTING.md:27` | Update after H3 |
 | D9 | Low | README is missing screenshots, uninstall steps (including `tccutil reset ListenEvent <bundle id>` and the login item), troubleshooting (Secure Input, Bluetooth latency, how to reset permission), and the global hotkey. It's also a single dense paragraph. | `README.md` | Restructure into What it does, Screenshots, Requirements, Install, Permissions, Usage, Troubleshooting, Uninstall, Build, Release, Licence |
 
 ---

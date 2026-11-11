@@ -1,6 +1,6 @@
 # Whoa Type
 
-![Whoa Type](banners/open-graph-1200x630.png)
+![Whoa Type](Docs/assets/branding/open-graph-1200x630.png)
 
 A native macOS menu bar app that plays mechanical-keyboard sounds as you type, plus click sounds for your mouse and trackpad. It uses SwiftUI, a listen-only Core Graphics event tap and an `AVAudioSourceNode` mixer. There are no third-party dependencies and no network access.
 
@@ -65,7 +65,7 @@ swift test
 
 `swift test` runs the core Swift Testing suite, not UI or permission checks. Add `WHOA_AUDIO_INTEGRATION=1` to include the real audio-engine test. Everything requires macOS and Xcode; none of it builds on Linux. For a local universal DMG run `scripts/build-dmg.sh 1.2`; output is `build/release/WhoaType-1.2-macOS.dmg`. Local builds require an Apple Development signing identity. Public releases require Developer ID signing and notarization. See [distribution](Docs/DISTRIBUTION.md).
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for module ownership and real-time contracts, and [validation](Docs/VALIDATION.md) for measured results and outstanding manual checks.
+See [architecture](Docs/ARCHITECTURE.md) for module ownership and real-time contracts, and [validation](Docs/VALIDATION.md) for measured results and outstanding manual checks.
 
 ## Sound packs
 
