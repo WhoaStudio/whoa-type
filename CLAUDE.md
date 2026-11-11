@@ -18,4 +18,4 @@
 - Never log input data or translate physical key codes to text. Probe permission does not authorize the main app.
 - Prepared packs intentionally reuse keyboard down/up samples. Names do not identify hardware, and source licensing does not establish recording rights.
 
-See `ARCHITECTURE.md` for module ownership and `Docs/VALIDATION.md` for manual release checks.
+See `Docs/ARCHITECTURE.md` for module ownership and `Docs/VALIDATION.md` for manual release checks.
